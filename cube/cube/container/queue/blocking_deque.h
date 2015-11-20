@@ -2,7 +2,6 @@
 #define _CUBE_CONTAINER_BLOCKING_DEQUE_H
 #include <deque>
 #include "cube/time/type.h"
-#include "cube/define/value.h"
 #include "cube/thread/thread.h"
 
 namespace cube{
@@ -27,7 +26,7 @@ namespace cube{
 			*@return:
 			*	0--success, <0--failed.
 			*/
-			int push_back(T obj, cube::time::msec_t waittm=CUBE_INFINITE);
+			int push_back(T obj, cube::time::msec_t waittm=-1);
 
 			/*
 			*	push a object @obj to the head of the queue, specify the waiting time
@@ -39,7 +38,7 @@ namespace cube{
 			*@return:
 			*	0--success, <0--failed.
 			*/
-			int push_front(T obj, cube::time::msec_t waitmsec=CUBE_INFINITE);
+			int push_front(T obj, cube::time::msec_t waitmsec=-1);
 
 			/*
 			*	pop a object from the tail of the queue
@@ -50,7 +49,7 @@ namespace cube{
 			*return:
 			*	0--success, <0--failed.
 			*/
-			int pop_back(T &obj, cube::time::msec_t waitmsec=CUBE_INFINITE);
+			int pop_back(T &obj, cube::time::msec_t waitmsec=-1);
 			
 			/*
 			*	pop a object from the head of the queue
@@ -61,7 +60,7 @@ namespace cube{
 			*return:
 			*	0--success, <0--failed.
 			*/
-			int pop_front(T &obj, cube::time::msec_t waitmsec=CUBE_INFINITE);
+			int pop_front(T &obj, cube::time::msec_t waitmsec=-1);
 
 		private:
 			int push(T obj, cube::time::msec_t waitmsec, bool to_back);

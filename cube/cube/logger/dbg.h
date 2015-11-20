@@ -1,6 +1,5 @@
-#pragma once
-namespace cube{
-	namespace logger{
+#ifndef _DBG_H
+#define _DBG_H
 #ifdef _DEBUG
 #define _DBG_OPEN
 #endif
@@ -87,5 +86,5 @@ namespace cube{
 #define DBG_FATAL(x)
 #define	XDBG_FATAL(x, file_flag)
 #endif /* DEBUG */
-	}
-}
+
+#endif
