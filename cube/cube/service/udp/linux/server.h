@@ -9,98 +9,64 @@
 #define CUBE_SERVICE_UDP_LINUX_SERVER_H_
 #include <vector>
 #include <pthread.h>
-#include "cube/service/udp/linux/handler.h"
+#include "cube/service/util/socket.h"
+#include "cube/service/udp/linux/worker.h"
 
 namespace cube {
 namespace service {
 using namespace std;
 template<class handler>
 class server {
-	friend class udp_receiver;
-
 public:
 	server();
 	virtual ~server();
 
-	/*
-	 *	start the udp service binding to @port with any local address
-	 *the @arg will passing the the handler's recall function.
-	 *return:
-	 *	0--start service success, other --failed
-	 */
-	int start(unsigned short port, int worknum, void *arg = 0);
-
-	/*
+	/**
 	 *	start the udp service binding to @port with local @ip
 	 *the @arg will passing the the handler's recall function.
 	 *return:
 	 *	0--start service success, other --failed
 	 */
-	int start(unsigned int ip, unsigned short port, int worknum, void *arg = 0);
+	int start(unsigned int ip, unsigned short port, unsigned int worknum, void *arg = 0);
 
-	/*
+	/**
 	 *	stop the udp service
 	 */
 	int stop();
 
-public:
-	/*adjust the max send & receive queue size for a good performance*/
-	void set_max_qsz(int sz) {
-		_max_qsz = sz;
-	}
-	int get_max_qsz() {
-		return _max_qsz;
-	}
+private:
+	/**
+	 * udp receive thread
+	 */
+	static void* recv_thread(void* arg = 0);
 
-	/*adjust the max send & receive data packet size for application*/
-	void set_max_psz(int sz) {
-		_max_psz = sz;
-	}
-	int get_max_psz() {
-		return _max_psz;
-	}
-
-	/*adjust the wait time for read&write with the read-write queue*/
-	void set_wait_qt(int million_sec) {
-		_wait_qt = million_sec;
-	}
-	int get_wait_qt() {
-		return _wait_qt;
-	}
+	/**
+	 * process request packet received, just give it to the selected worker
+	 */
+	void process(dpacket_t *req);
 
 private:
-	/*push a packet received by the receiver to the workers*/
-	void push(dpacket_t *pkt);
-
-private:
-	//local bind ip & port
+	//local bind socket
+	int _socket;
+	//local ip and port
 	unsigned int _ip;
 	unsigned short _port;
 
-	//argument for handler recall
-	void *_arg;
-
-	//max queue size for send&receiving queue
-	int _max_qsz;
-	//max packet size for send&receiving in bytes
-	int _max_psz;
-	//waiting time for read & write a item to read-write queue, in million sec
-	int _wait_qt;
-
-	//udp receiver object
-	udp_receiver _recver;
+	//receive thread handle & id
+	pthread_t _thread;
+	bool _stop;
 
 	//worker counter
 	unsigned int _counter;
 	//worker number
-	int _worknum;
+	unsigned int _worknum;
 	//udp worker list
-	vector<udp_worker<handler>*> _workers;
+	vector<worker<handler>*> _workers;
 };
 
 template<class handler>
 server<handler>::server() :
-		_ip(INADDR_ANY), _port(0), _counter(0), _worknum(1), _arg(NULL), _max_qsz(8192), _max_psz(1024), _wait_qt(5) {
+		_ip(INADDR_ANY), _port(0), _thread(0), _stop(true), _counter(0), _worknum(0) {
 }
 
 template<class handler>
@@ -108,52 +74,84 @@ server<handler>::~server() {
 }
 
 template<class handler>
-int server<handler>::start(unsigned short port, int worknum, void *arg/*=NULL*/) {
-	return start(INADDR_ANY, port, worknum, arg);
-}
-
-template<class handler>
-int server<handler>::start(unsigned int ip, unsigned short port, int worknum, void *arg/*=NULL*/) {
+int server<handler>::start(unsigned int ip, unsigned short port, unsigned int worknum, void *arg/*=NULL*/) {
 	/*set the parameter*/
 	_ip = ip;
 	_port = port;
 	_worknum = worknum;
-	_arg = arg;
+
+
+	/*bind local udp socket*/
+	_socket = udp_create(_ip, port);
+	if (_socket < 0) {
+		return -1;
+	}
 
 	/*start the workers*/
-	for (int i = 0; i < _worknum; i++) {
-		udp_worker<handler> *worker = new udp_worker<handler>();
-		int err = worker->start(_ip, _port, _max_psz, _max_qsz, _wait_qt, _arg);
+	if(_worknum < 0){
+		return -1;
+	}
+
+	for (unsigned int i = 0; i < _worknum; i++) {
+		worker<handler> *w = new worker<handler>();
+		int err = w->start(_socket, arg);
 		if (err != 0)
 			return -1;
-		_workers.push_back(worker);
+		_workers.push_back(w);
 	}
 
 	/*start the receiver*/
-	int err = _recver.start(_ip, _port, _max_psz, this);
-	if (err != 0)
+	_stop = false;
+	int err = pthread_create(&_thread, 0, recv_thread, this);
+	if (err != 0) {
+		_stop = true;
 		return -1;
+	}
 
 	return 0;
 }
 
 template<class handler>
-void server<handler>::push(dpacket_t *pkt) {
-	_workers[_counter++ % _worknum]->push(pkt);
-}
-
-template<class handler>
 int server<handler>::stop() {
 	/*stop receiver first*/
-	_recver.stop();
+	if (!_stop) {
+		_stop = true;
+		pthread_join(_thread, 0);
+	}
 
 	/*stop the workers*/
-	for (int i = 0; i < _worknum; i++) {
+	for (int i = 0; i < _workers.size(); i++) {
 		_workers[i]->stop();
 		delete _workers[i];
 	}
 	_workers.clear();
 
+	return 0;
+}
+
+template<class handler>
+void server<handler>::process(dpacket_t *req){
+	_workers[_counter++%_worknum]->process(req);
+}
+template<class handler>
+void* server<handler>::recv_thread(void *arg) {
+	server *pserver = (server *) arg;
+	/*!!recvfrom is blocking, so there is problem with stop action!!*/
+	while (!pserver->_stop) {
+		dpacket_t *req = new dpacket_t(2048);
+		socklen_t addrlen = sizeof(req->_addr);
+		req->_dsz = ::recvfrom(pserver->_socket, req->_buf, req->_bsz, 0, &req->_addr._addr, &addrlen);
+		if (req->_dsz < 0) {
+			/*some error occurred for the socket*/
+			cout << "fatal error: recvfrom failed." << endl;
+			delete req;
+			break;
+		}
+
+		pserver->process(req);
+	}
+
+	pthread_exit(0);
 	return 0;
 }
 }

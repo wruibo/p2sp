@@ -23,11 +23,12 @@ using namespace std;
  *	please adjust "queue size" for a good performance under different
  *platform with different hardware, like: CPU.
  */
+template<class type>
 class queue {
 public:
 	queue();
 	queue(unsigned long qsz);
-	~queue();
+	virtual ~queue();
 
 	/*
 	 *	initialize the queue with queue size @qsz
@@ -43,7 +44,7 @@ public:
 	 *return:
 	 *	0--always success, -1--failed
 	 */
-	int read(void *&ptr, int waittm = -1);
+	int read(type *ptr, int waittm = -1);
 
 	/*
 	 *	write a value to the queue in block mode until write success
@@ -51,7 +52,7 @@ public:
 	 *return:
 	 *	0--always success, -1--failed
 	 */
-	int write(void *ptr, int waittm = -1);
+	int write(type ptr, int waittm = -1);
 
 	/*
 	 *	read a value from queue in non-block mode
@@ -59,7 +60,7 @@ public:
 	 *return:
 	 *	0--success, -1--no value has read, must wait
 	 */
-	int _read(void *&ptr);
+	int _read(type *ptr);
 
 	/*
 	 *	write a value into the queue in non-block mode
@@ -67,7 +68,7 @@ public:
 	 *return:
 	 *	0--success, -1--no space can be used, must wait
 	 */
-	int _write(void *ptr);
+	int _write(type ptr);
 
 public:
 	/*
@@ -94,7 +95,7 @@ private:
 	unsigned long _qsize;
 
 	//queue array
-	void** _queue;
+	type* _queue;
 
 	//wait flag for read operation
 	volatile long _rwflag;
@@ -114,18 +115,19 @@ private:
 	sem_t _cond2;
 };
 
-queue::queue() :
+template<class type>
+queue<type>::queue() :
 		_qsize(0), _queue(0), _rwflag(0), _wwflag(0), _rpos((unsigned long) -1), _wpos((unsigned long) -1) , _cond1(0), _cond2(0){
 
 }
 
-queue::queue(unsigned long qsz) {
+template<class type>
+queue<type>::queue(unsigned long qsz) {
 	/*initial value of queue*/
 	_qsize = roundup_power_of_two(qsz);
-	+
 
 	/*allocate the queue buffer*/
-	_queue = new void*[_qsize];
+	_queue = new type[_qsize];
 
 	/*initialize the read&write wait flag*/
 	_rwflag = 1;
@@ -145,8 +147,9 @@ queue::queue(unsigned long qsz) {
 		cout << "initial cycled read&write queue condition2 failed." << endl;
 }
 
-queue::~queue() {
-	if (_queue != NULL)
+template<class type>
+queue<type>::~queue() {
+	if (_queue != 0)
 		delete[] _queue;
 	_queue = 0;
 
@@ -154,13 +157,14 @@ queue::~queue() {
 	sem_destroy(&_cond2);
 }
 
-int queue::init(unsigned long qsz) {
+template<class type>
+int queue<type>::init(unsigned long qsz) {
 	/*initial value of queue*/
 	_qsize = roundup_power_of_two(qsz);
 
 	/*allocate the queue buffer*/
-	_queue = new void*[_qsize];
-	if (_queue == NULL)
+	_queue = new type[_qsize];
+	if (_queue == 0)
 		return -1;
 
 	/*initialize the read&write wait flag*/
@@ -183,7 +187,8 @@ int queue::init(unsigned long qsz) {
 	return 0;
 }
 
-int queue::read(void *&ptr, int waittm/*=-1*/) {
+template<class type>
+int queue<type>::read(type *ptr, int waittm/*=-1*/) {
 	int wtm = 10;
 	if (!(waittm < 0))
 		wtm = waittm;
@@ -218,7 +223,8 @@ int queue::read(void *&ptr, int waittm/*=-1*/) {
 	return 0;
 }
 
-int queue::write(void *ptr, int waittm/*=-1*/) {
+template<class type>
+int queue<type>::write(type ptr, int waittm/*=-1*/) {
 	int wtm = 10;
 	if (!(waittm < 0))
 		wtm = waittm;
@@ -253,12 +259,13 @@ int queue::write(void *ptr, int waittm/*=-1*/) {
 	return 0;
 }
 
-int queue::_read(void *&ptr) {
+template<class type>
+int queue<type>::_read(type *ptr) {
 	unsigned long fillsz = _wpos - _rpos;
 
 	if (fillsz != 0) {
 		unsigned long rpos = _rpos & (_qsize - 1);
-		ptr = _queue[rpos];
+		ptr = &_queue[rpos];
 		_rpos++;
 	} else
 		return -1;
@@ -266,7 +273,8 @@ int queue::_read(void *&ptr) {
 	return 0;
 }
 
-int queue::_write(void *ptr) {
+template<class type>
+int queue<type>::_write(type ptr) {
 	unsigned long leftsz = _qsize - _wpos + _rpos;
 
 	if (leftsz != 0) {
@@ -279,7 +287,8 @@ int queue::_write(void *ptr) {
 	return 0;
 }
 
-int queue::get_waittm(struct timespec *tw, int elapse) {
+template<class type>
+int queue<type>::get_waittm(struct timespec *tw, int elapse) {
 	clock_gettime(CLOCK_REALTIME, tw);
 	tw->tv_sec += (time_t) (elapse / 1000);
 	tw->tv_nsec += ((long) (elapse % 1000)) * 1000 * 1000;
@@ -291,7 +300,8 @@ int queue::get_waittm(struct timespec *tw, int elapse) {
 	return 0;
 }
 
-unsigned long queue::roundup_power_of_two(unsigned long val) {
+template<class type>
+unsigned long queue<type>::roundup_power_of_two(unsigned long val) {
 	/*val is the power of 2*/
 	if ((val & (val - 1)) == 0)
 		return val;
