@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>natsvr</name>
+	<name>cudp</name>
 	<comment></comment>
 	<projects>
-		<project>cube</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

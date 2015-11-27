@@ -4,7 +4,8 @@
  *  Created on: 2015年10月20日
  *      Author: wrb00_000
  */
-#include "cube/service/udp/linux/server.h"
+#include "cube/thread/util.h"
+#include "cube/service/udp/server.h"
 
 class myhandler: public cube::service::handler{
 public:
@@ -17,6 +18,9 @@ int main(int argc, char* argv[]) {
 	cube::service::server<myhandler> svc;
 	svc.start(8000, 1, 0);
 
+	while(true){
+		cube::thread::sleep(1000);
+	}
 	return 0;
 }
 

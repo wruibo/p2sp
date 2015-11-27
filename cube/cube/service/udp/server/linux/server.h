@@ -5,12 +5,12 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_UDP_LINUX_SERVER_H_
-#define CUBE_SERVICE_UDP_LINUX_SERVER_H_
+#ifndef CUBE_SERVICE_UDP_SERVER_LINUX_SERVER_H_
+#define CUBE_SERVICE_UDP_SERVER_LINUX_SERVER_H_
+#include <cube/service/udp/server/linux/worker.h>
 #include <vector>
 #include <pthread.h>
 #include "cube/service/util/socket.h"
-#include "cube/service/udp/linux/worker.h"
 
 namespace cube {
 namespace service {
@@ -157,4 +157,4 @@ void* server<handler>::recv_thread(void *arg) {
 }
 }
 
-#endif /* CUBE_SERVICE_UDP_LINUX_SERVER_H_ */
+#endif /* CUBE_SERVICE_UDP_SERVER_LINUX_SERVER_H_ */

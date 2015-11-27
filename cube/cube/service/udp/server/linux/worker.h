@@ -5,12 +5,12 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_UDP_LINUX_WORKER_H_
-#define CUBE_SERVICE_UDP_LINUX_WORKER_H_
-#include <cube/service/udp/handler.h>
+#ifndef CUBE_SERVICE_UDP_SERVER_LINUX_WORKER_H_
+#define CUBE_SERVICE_UDP_SERVER_LINUX_WORKER_H_
+#include <cube/service/udp/server/handler.h>
 #include <list>
 #include <pthread.h>
-#include "cube/service/util/linux/queue.h"
+#include "cube/service/util/queue.h"
 
 namespace cube {
 namespace service {
@@ -144,4 +144,4 @@ void* worker<handler>::worker_thread(void *arg) {
 }
 }
 }
-#endif /* CUBE_SERVICE_UDP_LINUX_WORKER_H_ */
+#endif /* CUBE_SERVICE_UDP_SERVER_LINUX_WORKER_H_ */

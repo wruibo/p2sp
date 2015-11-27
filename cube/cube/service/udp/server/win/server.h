@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_UDP_WIN_SERVER_H_
-#define CUBE_SERVICE_UDP_WIN_SERVER_H_
+#ifndef CUBE_SERVICE_UDP_SERVER_WIN_SERVER_H_
+#define CUBE_SERVICE_UDP_SERVER_WIN_SERVER_H_
 #include <vector>
 #include "win/udp_worker.h"
 #include "win/udp_receiver.h"
@@ -23,20 +23,12 @@ namespace netsvc{
 		virtual ~udp_service();
 
 		/*
-		*	start the udp service binding to @port with any local address
-		*the @arg will passing the the handler's recall function.
-		*return:
-		*	0--start service success, other --failed
-		*/
-		int start(unsigned short port, int worknum, void *arg=NULL);
-
-		/*
 		*	start the udp service binding to @port with local @ip
 		*the @arg will passing the the handler's recall function.
 		*return:
 		*	0--start service success, other --failed
 		*/
-		int start(unsigned int ip, unsigned short port, int worknum, void *arg=NULL);
+		int start(unsigned int ip, unsigned short port, int worknum, void *arg = 0);
 
 		/*
 		*	stop the udp service
@@ -87,19 +79,13 @@ namespace netsvc{
 	};
 
 	template<class handler>
-	udp_service<handler>::udp_service():_ip(INADDR_ANY),_port(0),_counter(0),_worknum(1),_arg(NULL),_max_qsz(8192),_max_psz(1024),_wait_qt(5)
+	udp_service<handler>::udp_service():_ip(INADDR_ANY),_port(0),_counter(0),_worknum(1),_arg(0),_max_qsz(8192),_max_psz(1024),_wait_qt(5)
 	{
 	}
 
 	template<class handler>
 	udp_service<handler>::~udp_service()
 	{
-	}
-
-	template<class handler>
-	int udp_service<handler>::start(unsigned short port, int worknum, void *arg/*=NULL*/)
-	{
-		return start(INADDR_ANY, port, worknum, arg);
 	}
 
 	template<class handler>
@@ -152,4 +138,4 @@ namespace netsvc{
 		return 0;
 	}
 }
-#endif /* CUBE_SERVICE_UDP_WIN_SERVER_H_ */
+#endif /* CUBE_SERVICE_UDP_SERVER_WIN_SERVER_H_ */

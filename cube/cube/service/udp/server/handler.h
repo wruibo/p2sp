@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_UDP_HANDLER_H_
-#define CUBE_SERVICE_UDP_HANDLER_H_
+#ifndef CUBE_SERVICE_UDP_SERVER_HANDLER_H_
+#define CUBE_SERVICE_UDP_SERVER_HANDLER_H_
 #include "cube/service/netstd.h"
 
 namespace cube {
@@ -71,4 +71,4 @@ public:
 };
 }
 }
-#endif /* CUBE_SERVICE_UDP_HANDLER_H_ */
+#endif /* CUBE_SERVICE_UDP_SERVER_HANDLER_H_ */

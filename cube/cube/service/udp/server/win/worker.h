@@ -7,10 +7,10 @@
 
 #ifndef CUBE_SERVICE_UDP_LINUX_WORKER_H_
 #define CUBE_SERVICE_UDP_LINUX_WORKER_H_
+#include <cube/service/udp/server/handler.h>
 #include <list>
 #include <pthread.h>
-#include "cube/service/util/queue.h"
-#include "cube/service/udp/handler.h"
+#include "cube/service/util/linux/queue.h"
 
 namespace cube {
 namespace service {
