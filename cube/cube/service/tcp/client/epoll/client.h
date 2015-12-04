@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_EPOLL_CONNECTOR_H_
-#define CUBE_SERVICE_EPOLL_CONNECTOR_H_
+#ifndef CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
+#define CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
 #include <list>
 #include <vector>
 #include <fcntl.h>
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include "cube/service/tcp/epoll/worker.h"
+#include "cube/service/tcp/client/epoll/worker.h"
 
 namespace cube {
 namespace service {

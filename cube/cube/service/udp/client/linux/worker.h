@@ -7,6 +7,7 @@
 
 #ifndef CUBE_SERVICE_UDP_CLIENT_LINUX_WORKER_H_
 #define CUBE_SERVICE_UDP_CLIENT_LINUX_WORKER_H_
+#include "cube/service/udp/client/handler.h"
 
 namespace cube{
 namespace service{

@@ -19,13 +19,8 @@ namespace service {
 static int udp_create(unsigned int ip, unsigned short port) {
 	/*create socket*/
 	int sock = ::socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock == -1)
+	if (sock < 0)
 		return -1; //create socket failed
-
-	/*set reuse address*/
-	int on = 1;
-	if (::setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0)
-		return -1;
 
 	/*bind to port*/
 	struct sockaddr_in addr;
@@ -34,8 +29,39 @@ static int udp_create(unsigned int ip, unsigned short port) {
 	addr.sin_addr.s_addr = htonl(ip);
 	addr.sin_port = htons(port);
 	int err = ::bind(sock, (struct sockaddr*) &addr, sizeof(addr));
-	if (err != 0)
+	if (err != 0){
+		::close(sock);
 		return -1; //bind to socket error
+	}
+
+	return sock;
+}
+
+/**
+ *	create an udp socket for an remote peer with @ip and @port
+ *	@param ip: remote peer ip
+ *	@param port: remote peer port
+ *	@return:
+ *		socket on success, -1 when failed
+ */
+static int udp_connect(unsigned int ip, unsigned short port){
+	/*create socket for remote peer*/
+	int sock = ::socket(AF_INET, SOCK_DGRAM, 0);
+	if(sock < 0){
+		return sock;
+	}
+
+	/*connect to the remote peer*/
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(ip);
+	addr.sin_port = htons(port);
+	int err = ::connect(sock, (struct sockaddr*) &addr, sizeof(addr));
+	if(err != 0){
+		::close(sock);
+		return -1;
+	}
 
 	return sock;
 }

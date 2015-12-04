@@ -10,19 +10,13 @@
 #include "cube/service/netstd.h"
 
 namespace cube {
-namespace server {
-SOCKET udp_create(unsigned int ip, unsigned short port) {
+namespace service {
+
+static SOCKET udp_create(unsigned int ip, unsigned short port) {
 	/*create socket*/
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock == INVALID_SOCKET)
 		return INVALID_SOCKET;
-
-	/*set reuse address*/
-	int on = 1;
-	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char*) &on, sizeof(on)) != 0) {
-		closesocket(sock);
-		return INVALID_SOCKET;
-	}
 
 	/*bind to local ip & port*/
 	SOCKADDR_IN addr;
@@ -38,6 +32,36 @@ SOCKET udp_create(unsigned int ip, unsigned short port) {
 
 	return sock;
 }
+
+/**
+ *	create an udp socket for an remote peer with @ip and @port
+ *	@param ip: remote peer ip
+ *	@param port: remote peer port
+ *	@return:
+ *		socket on success, -1 when failed
+ */
+static SOCKET udp_connect(unsigned int ip, unsigned short port){
+	/*create socket for remote peer*/
+	SOCKET sock = ::socket(AF_INET, SOCK_DGRAM, 0);
+	if(sock < 0){
+		return sock;
+	}
+
+	/*connect to the remote peer*/
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(ip);
+	addr.sin_port = htons(port);
+	int err = ::connect(sock, (struct sockaddr*) &addr, sizeof(addr));
+	if(err != 0){
+		::closesocket(sock);
+		return -1;
+	}
+
+	return sock;
+}
+
 }
 }
 
