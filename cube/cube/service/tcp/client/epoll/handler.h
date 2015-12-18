@@ -8,168 +8,150 @@
 #ifndef CUBE_SERVICE_EPOLL_HANDLER_H_
 #define CUBE_SERVICE_EPOLL_HANDLER_H_
 #include <time.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-namespace cube{
-namespace service{
-	/*abstract handler for epoll accepter & connector*/
-	class handler
-	{
-	public:
-		handler();
-		virtual ~handler(void);
+#include "cube/service/stdns.h"
+#include "cube/service/stdsvc.h"
+BEGIN_SERVICE_TCP_NS
+/*abstract handler for client using epoll connector*/
+class handler
+{
+public:
+	handler();
+	virtual ~handler(void);
 
-		/*
-		*	recall method after the connection has build, the @arg is
-		*passed to the accepter when start the service.
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_open(void *arg);
+	/*
+	 *	recall method after the connection has build
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_open();
 
-		/*
-		*	recall method when the epoll write edge triggered, send data
-		*until can not send.
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_send();
+	/*
+	 *	recall method when the epoll write edge triggered, send data
+	 *until can not send.
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_send();
 
-		/*
-		*	recall method when the epoll read edge triggered, receive data
-		*until no data could be received.
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_recv();
+	/*
+	 *	recall method when the epoll read edge triggered, receive data
+	 *until no data could be received.
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_recv();
 
-		/*
-		*	recall method when error happened on the socket
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_error(int err);
+	/*
+	 *	recall method when error happened on the socket
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_error(int err);
 
-		/*
-		*	recall method before socket closed, always invoked before the
-		*handler destroyed.
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_close();
+	/*
+	 *	recall method before socket closed, always invoked before the
+	 *handler destroyed.
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_close();
 
-		/*
-		*	recall method when peer shutdown the send channel. which means
-		*fin packet received
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_shutd();
+	/*
+	 *	recall method when peer shutdown the send channel. which means
+	 *fin packet received
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_shutd();
 
-		/*
-		*	recall method when timer triggered. timer event is set
-		*by calling the @set_timeout method
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_timeout();
+	/*
+	 *	recall method when timer triggered. timer event is set
+	 *by calling the @set_timeout method
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_timeout();
 
-		/*
-		*	recall method every tiny period
-		*return:
-		*	0--success, other--failed, handler will be destroyed
-		*/
-		virtual int handle_run(time_t tm);
+	/*
+	 *	recall method every tiny period
+	 *return:
+	 *	0--success, other--failed, handler will be destroyed
+	 */
+	virtual int handle_run(time_t tm);
 
-	public:
-		inline void sock(int sk)
-		{
-			_sock = sk;
-		}
+public:
+	/*set & get the connection information*/
+	void sock(int sock);
+	int sock() const;
+	void remote_ip(unsigned int ip);
+	unsigned int remote_ip() const;
+	void remote_port(unsigned short port);
+	unsigned short remote_port() const;
 
-		inline int sock() const
-		{
-			return _sock;
-		}
+	/*set the timer delay time in seconds*/
+	void set_timeout(int delay_secs);
 
-		inline void peer_ip(unsigned int ip)
-		{
-			_ip = ip;
-		}
+	/*check is the timer should be triggered*/
+	bool is_timeout(time_t now);
+protected:
+	/*send data to peer*/
+	ssize_t send(const void*buffer, size_t length, int flags);
+	/*received data from peer*/
+	ssize_t recv(char *buffer, int length, int flags);
 
-		inline unsigned int peer_ip()
-		{
-			return _ip;
-		}
+private:
+	//socket of the relate handler
+	int _sock;
+	//remote peer ip
+	unsigned int _remote_ip;
+	//remote peer port
+	unsigned short _remote_port;
 
-		inline void peer_port(unsigned short port)
-		{
-			_port = port;
-		}
+	//timer trigger timestamp
+	time_t _timer_tm;
+};
 
-		inline unsigned short peer_port()
-		{
-			return _port;
-		}
-
-		inline void userarg(void *arg)
-		{
-			_userarg = arg;
-		}
-
-		inline void* userarg()
-		{
-			return _userarg;
-		}
-
-		/*set the timer delay time in seconds*/
-		inline void set_timeout(int delay_secs)
-		{
-			_timer_tm = time(NULL)+delay_secs;
-		}
-
-		/*check is the timer should be triggered*/
-		inline bool is_timeout(time_t now)
-		{
-			/*check the timer*/
-			if(_timer_tm == ((time_t)-1))
-				return false;
-
-			if(_timer_tm > now)
-				return false;
-
-			/*set the timer invalid when triggered once*/
-			_timer_tm = (time_t)(-1);
-
-			return true;
-
-			return true;
-		}
-
-	protected:
-		/*send data to peer*/
-		ssize_t send(const void*buffer, size_t length, int flags);
-		/*received data from peer*/
-		ssize_t recv(char *buffer, int length, int flags);
-
-	private:
-		//socket of the relate handler
-		int _sock;
-		//remote peer ip
-		unsigned int _ip;
-		//remote peer port
-		unsigned short _port;
-
-		//timer trigger timestamp
-		time_t _timer_tm;
-
-		//user argument, only used in accepter
-		void *_userarg;
-	};
-}
+handler::handler(): _sock(-1), _remote_ip(0), _remote_port(0), _timer_tm(-1) {
 }
 
+handler::~handler() {
+}
+
+void handler::sock(int sock) {
+	_sock = sock;
+}
+
+int handler::sock() const {
+	return _sock;
+}
+
+void handler::remote_ip(unsigned int ip) {
+	_remote_ip = ip;
+}
+
+unsigned int handler::remote_ip() const {
+	return _remote_ip;
+}
+
+void handler::remote_port(unsigned short port) {
+	_remote_port = port;
+}
+
+unsigned short handler::remote_port() const {
+	return _remote_port;
+}
+void handler::set_timeout(int delay_secs) {
+	_timer_tm = time(0)+delay_secs;
+}
+
+bool handler::is_timeout(time_t now)
+{
+	if(_timer_tm == ((time_t)-1) || _timer_tm > now){ //timer not set or not triggered
+		return false;
+	} else {//timer triggered, reset the timer
+		_timer_tm = (time_t)(-1);
+		return true;
+	}
+}
+END_SERVICE_TCP_NS
 #endif /* CUBE_SERVICE_EPOLL_HANDLER_H_ */

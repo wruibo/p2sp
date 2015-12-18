@@ -42,7 +42,13 @@ public:
 	/**
 	 * stop the client service
 	 */
-	int stop();
+	void stop();
+
+private:
+	/**
+	 *	free client resources
+	 */
+	void free();
 
 private:
 	//worker number
@@ -62,16 +68,16 @@ client::~client(){
 }
 
 int client::start(int worknum){
-	/*start the workers*/
 	if(worknum < 1){
 		return -1;
 	}
 	_worknum = worknum;
 
-	for(int i=0; i<worknum; i++){
+	for(int i=0; i<_worknum; i++){
 		worker* pworker = new worker();
 		if(pworker->start() != 0){
 			delete pworker;
+			free(); //free the other workers
 			return -1;
 		}
 		_workers.push_back(pworker);
@@ -89,20 +95,22 @@ int client::open(unsigned int ip, unsigned short port, handler *hd){
 	}
 
 	/*add the new peer to a selected worker*/
-	_workers[++_pos%_worknum]->add(socket, hd);
+	_workers[++_pos%_worknum]->add(hd);
 
 	return 0;
 }
 
-int client::stop(){
+void client::stop(){
+	free();
+}
+
+void client::free(){
 	int num = (int)_workers.size();
 	for(int i=0; i<num; i++){
 		_workers[i]->stop();
 		delete _workers[i];
 	}
 	_workers.clear();
-
-	return 0;
 }
 
 }

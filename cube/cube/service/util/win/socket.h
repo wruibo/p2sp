@@ -7,7 +7,7 @@
 
 #ifndef CUBE_SERVICE_UTIL_WIN_SOCKET_H_
 #define CUBE_SERVICE_UTIL_WIN_SOCKET_H_
-#include "cube/service/netstd.h"
+#include "../../stdsvc.h"
 
 namespace cube {
 namespace service {

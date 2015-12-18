@@ -5,11 +5,15 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_NETSTD_H_
-#define CUBE_SERVICE_NETSTD_H_
+#ifndef CUBE_SERVICE_STDSVC_H_
+#define CUBE_SERVICE_STDSVC_H_
 
 #if defined(__linux__)
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #elif defined(__WIN32__)
 #include <WinSock2.h>
@@ -19,4 +23,4 @@
 #endif
 
 
-#endif /* CUBE_SERVICE_NETSTD_H_ */
+#endif /* CUBE_SERVICE_STDSVC_H_ */

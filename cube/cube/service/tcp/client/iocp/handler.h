@@ -8,11 +8,9 @@
 #ifndef CUBE_SERVICE_IOCP_HANDLER_H_
 #define CUBE_SERVICE_IOCP_HANDLER_H_
 #include <time.h>
-#include <WinSock2.h>
-#include <Windows.h>
-
-namespace cube {
-namespace service {
+#include "cube/service/stdns.h"
+#include "cube/service/stdsvc.h"
+BEGIN_SERVICE_TCP_NS
 /*abstract iocp handler class for iocp accepter & connector*/
 class handler {
 public:
@@ -179,6 +177,5 @@ struct iocp_overlapped {
 		_opt = IOCP_INVALID;
 	}
 };
-}
-}
+BEGIN_SERVICE_TCP_NS
 #endif /* CUBE_SERVICE_IOCP_HANDLER_H_ */

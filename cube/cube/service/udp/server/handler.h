@@ -7,7 +7,7 @@
 
 #ifndef CUBE_SERVICE_UDP_SERVER_HANDLER_H_
 #define CUBE_SERVICE_UDP_SERVER_HANDLER_H_
-#include "cube/service/netstd.h"
+#include "../../stdsvc.h"
 
 namespace cube {
 namespace service {
