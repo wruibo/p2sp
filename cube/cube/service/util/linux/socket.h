@@ -27,7 +27,7 @@ static int set_nonblock(int fd) {
  * @return
  * 	socket for the connection, or <0 for failure
  */
-static int tcp_connect(unsigned int ip, unsigned short port){
+static int async_tcp_connect(unsigned int ip, unsigned short port){
 	/*create socket*/
 		int sock = ::socket(AF_INET, SOCK_STREAM, 0);
 		if (sock == -1)

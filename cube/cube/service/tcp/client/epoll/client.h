@@ -7,123 +7,152 @@
 
 #ifndef CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
 #define CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
-#include <list>
-#include <vector>
-#include <fcntl.h>
-#include <string.h>
 #include <unistd.h>
+
 #include "cube/service/stdns.h"
 #include "cube/service/stdsvc.h"
-#include "cube/service/tcp/client/epoll/worker.h"
-#include "cube/service/tcp/client/epoll/handler.h"
+#include "cube/service/tcp/client/client.h"
+#include "cube/service/tcp/client/epoll/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
-/*active tcp connecting service with epoll under linux*/
-class client {
+/*client service using epoll under linux*/
+class eclient : public client{
 public:
-	client();
-	virtual ~client();
+	eclient();
+	virtual ~eclient();
 
-	/*
-	 *	start connector with @worker number int epoll trigger mode
-	 *return:
-	 *	0--success, other--failed.
+	/**
+	 * start the client service with specified workers
+	 *@param workers: worker number for the service
+	 *@return:
+	 *	0-success, otherwise failed.
 	 */
-	int start(int worker_num);
+	virtual int start(int workers);
 
-	/*
-	 *	connect to remote peer with @ip:@port in nonblocking mode,
-	 *where the @ip&@port are host byte order, with the handler @hd
-	 *to process the connection.
-	 *@param ip: remote peer ip
+	/**
+	 * build a connection to remote peer
+	 *@param ip: remote peer id
 	 *@param port: remote peer port
-	 *@param hd: handler to process the connection
-	 *return:
-	 *	0--success, other--failed.
+	 *@param hdr: handler for process the connection
+	 *@return:
+	 *	0-success, otherwise failed.
 	 */
-	int connect(unsigned long ip, unsigned short port, handler *hd);
+	virtual int build(unsigned int ip, unsigned short port, handler *hdr);
 
-	/*
-	 *	stop connector service
-	 *return:
-	 *	always return 0
+	/**
+	 * stop the client service
+	 *@return:
+	 *	0-success, otherwise failed.
 	 */
-	int stop();
+	virtual int stop();
 
 private:
 	/**
-	 * free client resources
+	 * pull established handlers from connector, dispatch to workers
 	 */
-	void free();
+	void process_established_handlers();
+
+	/**
+	 * wait a tiny time for next loop in client thread
+	 */
+	void wait_for_next_loop();
+
+	/**
+	 * loop for client thread
+	 */
+	void run_loop();
+
+	/**
+	 * thread function for client thread
+	 */
+	static void* client_thread_func(void *arg);
 
 private:
-	//worker number
-	int _worker_num;
-	//iocp workers for accepter
-	vector<worker*> _workers;
-	//the next handler process worker
-	int _worker_pos;
+	//connector of the client
+	connector _connector;
+	//workers of the client
+	workers _workers;
+
+	//thread identifier
+	pthread_t _thread;
+	//stop flag for client service
+	bool _stop;
 };
 
-client::client() :
-		 _worker_num(0), _worker_pos(0){
+eclient::eclient(): _thread(0), _stop(true) {
 
 }
 
-client::~client() {
+eclient::~eclient() {
 }
 
-int client::start(int worker_num) {
-	if(worker_num < 1){
-		return -1;
-	}
-	_worker_num = worker_num;
-
-	/*start epoll io workers*/
-	for (int i = 0; i < _worker_num; i++) {
-		worker *worker = new worker();
-		if (worker->start() != 0){
-			delete worker;
-			free();
-			return -1;
-		}
-		_workers.push_back(worker);
+int eclient::start(int workers) {
+	/*check if client has been started*/
+	if(!_stop){
+		return 0;
 	}
 
-	return 0;
-}
+	/*start workers*/
+	if(_workers.start(workers) != 0){
+		return -1;;
+	}
 
-int client::connect(unsigned long ip, unsigned short port, handler *hd) {
-	/*create socket*/
-	int sock = tcp_connect(ip, port);
-	if(sock < 0){
+	/*start connector*/
+	if(_connector.start(&_workers) != 0){
 		return -1;
 	}
 
-	/*set the handler with address information*/
-	hd->sock(sock);
-	hd->remote_ip(ip);
-	hd->remote_port(port);
-
-	/*add the handler to next worker*/
-	_workers[_worker_pos++%_worker_num]->add(hd);
-
-	return 0;
-}
-
-int client::stop() {
-	free();
-	return 0;
-}
-
-void client::free(){
-	for (int i=0; i<_workers.size(); i++) {
-		_workers[i]->stop();
-		delete _workers[i];
+	/*start client thread*/
+	_stop = false;
+	if(pthread_create(&_thread, 0, client_thread_func, this) != 0){
+		_stop = true;
+		return -1;
 	}
-	_workers.clear();
+
+	return 0;
 }
 
+int eclient::build(unsigned int ip, unsigned short port, handler *hdr){
+	return _connector.connect(ip, port, hdr);
+}
+
+int eclient::stop() {
+	/*check current client status*/
+	if(_stop){
+		return 0;
+	}
+
+	/*stop client thread*/
+	_stop = true;
+	pthread_join(_thread, 0);
+
+	/*stop connector*/
+	_connector.stop();
+
+	/*stop workers*/
+	_workers.stop();
+
+	return 0;
+}
+
+void eclient::wait_for_next_loop(){
+	/*wait for 5ms*/
+	::usleep(5000);
+}
+
+void eclient::run_loop(){
+	while(!_stop){
+		/*wait a tiny time for next loop*/
+		wait_for_next_loop();
+	}
+	pthread_exit(0);
+}
+
+void* eclient::client_thread_func(void* arg){
+	eclient *pclient = (eclient*)arg;
+	pclient->run_loop();
+	return 0;
+}
 END_SERVICE_TCP_NS
 #endif /* CUBE_SERVICE_EPOLL_CONNECTOR_H_ */

@@ -11,14 +11,10 @@
 #include <map>
 #include <pthread.h>
 #include <sys/epoll.h>
-#include "cube/service/util/cdeque.h"
-#include "cube/service/util/linux/queue.h"
-#include "cube/service/tcp/client/epoll/handler.h"
 
-//for checking the peer shutdown or close events, support from linux kernel 2.6.x
-#ifndef EPOLLRDHUP
-#define EPOLLRDHUP 0x2000
-#endif
+#include "cube/service/util/cdeque.h"
+#include "cube/service/tcp/client/handler.h"
+#include "cube/service/tcp/client/epoll/events.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
@@ -41,7 +37,7 @@ public:
 	 * @return:
 	 * 	0-success, otherwise for failed
 	 */
-	void add(handler *hd);
+	void dispatch(handler *hd);
 
 	/**
 	 * stop the worker
@@ -49,42 +45,59 @@ public:
 	int stop();
 
 private:
-	//accept the new connection dispatched from accepter
-	void accept();
-
-	//remove a handler with socket @s from handle list
+	/**
+	 * remove a handler with socket @s from handle list
+	 */
 	void remove(int sock);
 
-	//run all handlers
-	void run();
-
-	//free all handlers
+	/**
+	 * free all handlers
+	 */
 	void free();
 
-	//iocp worker thread
-	static void* work_thread(void *arg);
+	/**
+	 * accept the new connection dispatched from connector
+	 */
+	void accept_pending_handlers();
+
+	/**
+	 * poll all processing handlers from epoll, process io operation
+	 */
+	void poll_processing_handlers();
+
+	/**
+	 * process timeout event & give run for every processing handler
+	 */
+	void run_processing_handlers();
+
+	/**
+	 * loop for work thread
+	 */
+	void run_loop();
+
+	/**
+	 * thread function for worker
+	 */
+	static void* work_thread_func(void *arg);
 
 private:
-	//pending handlers waiting for add to epoll
-	cdeque<handler*> _pending_handlers;
+	//epoll handle
+	int _epoll;
+	//epoll events cache
+	events _events;
 
-	//epoll handler
-	int _epoll_fd;
-	//events number for epoll wait
-	int _epoll_wait_events;
-	//timeout for epoll wait
-	int _epoll_wait_timeout;
-	//processing handlers added to the epoll already
+	//pending handlers waiting for add to worker
+	cdeque<handler*> _pending_handlers;
+	//processing handlers in the worker
 	map<int, handler*> _processing_handlers;
 
 	//worker thread handler
-	pthread_t _thread_worker;
+	pthread_t _thread;
 	//stop flag for worker thread
-	bool _worker_stop;
+	bool _stop;
 };
 
-worker::worker() :
-		_epoll_fd(-1), _epoll_wait_events(32), _epoll_wait_timeout(5), _thread_worker(0), _worker_stop(true){
+worker::worker(): _epoll(-1), _thread(-1), _stop(true){
 }
 
 worker::~worker(void) {
@@ -92,151 +105,160 @@ worker::~worker(void) {
 
 int worker::start() {
 	/*create epoll*/
-	_epoll_fd = epoll_create(256);
-	if (_epoll_fd == -1)
+	_epoll = epoll_create(256);
+	if (_epoll == -1)
 		return -1;
 
 	/*start worker thread*/
-	_worker_stop = false;
-	if (pthread_create(&_thread_worker, 0, work_thread, this) != 0) {
-		_worker_stop = true;
+	_stop = false;
+	if (pthread_create(&_thread, 0, work_thread_func, this) != 0) {
+		_stop = true;
 		return -1;
 	}
 
 	return 0;
 }
 
+void worker::dispatch(handler *hd) {
+	_pending_handlers.push_back(hd);
+}
+
 int worker::stop() {
+	if(_stop){
+		return -1;
+	}
+
 	/*stop worker thread*/
-	_worker_stop = true;
-	pthread_join(_thread_worker, 0);
+	_stop = true;
+	pthread_join(_thread, 0);
+
+	/*free all handlers*/
+	this->free();
 
 	/*close the epoll*/
-	if (_epoll_fd != 0)
-		close(_epoll_fd);
-	_epoll_fd = -1;
+	::close(_epoll);
 
 	return 0;
 }
 
-void worker::add(handler *hd) {
-	_pending_handlers.push_back(hd);
+void worker::remove(int sock) {
+	map<int, handler*>::iterator iter = _processing_handlers.find(sock);
+	if (iter != _processing_handlers.end()) {
+		iter->second->on_close();
+		_processing_handlers.erase(iter);
+		delete *iter;
+	}
 }
 
-void worker::accept() {
-	handler *hd = 0;
-	while(_pending_handlers.pop_front(hd)){
-		int sock = hd->sock();
-		if (hd->handle_open() != 0) {
-			hd->handle_close();
+void worker::free() {
+	/*free processing handlers*/
+	map<int, handler*>::iterator iter = _processing_handlers.begin(), iterend = _processing_handlers.end();
+	while(iter != iterend){
+		iter->second->on_close();
+		delete *iter;
+		iter++;
+	}
+	_processing_handlers.clear();
+
+	/*free pending handlers*/
+	handler *hdr = 0;
+	while (_pending_handlers.pop_front(hdr)) {
+		hdr->on_close();
+	}
+}
+
+void worker::accept_pending_handlers() {
+	handler *hdr = 0;
+	while(_pending_handlers.pop_front(hdr)){
+		if (hdr->on_open() != 0) {
+			/*recall on open failed*/
+			hdr->on_close(ERR_TERMINATE_SESSION);
+			delete *hdr;
 		} else {
-			int epoll_opt = EPOLL_CTL_ADD;
-			u_int events = EPOLLERR | EPOLLIN | EPOLLOUT | EPOLLRDHUP | EPOLLET;
-
+			/*add the handler to epoll*/
 			struct epoll_event ev;
-			ev.events = events;
-			ev.data.ptr = hd;
+			ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+			ev.data.ptr = hdr;
 
-			if (epoll_ctl(_epoll_fd, epoll_opt, sock, &ev) == -1) {
-				hd->handle_error(errno);
-				hd->handle_close();
+			if (epoll_ctl(_epoll, EPOLL_CTL_ADD, hdr->session().sock(), &ev) < 0) {
+				hdr->on_close(ERR_EPOLL_ADD_FAILED);
+				delete *hdr;
 			} else{
-				_processing_handlers.insert(pair<int, handler*>(sock, hd));
+				_processing_handlers.insert(pair<int, handler*>(hdr->session().sock(), hdr));
 			}
 		}
 	}
 }
 
-void worker::run() {
+void worker::poll_processing_handlers() {
+	/*process the handlers in the epoll*/
+	int num = epoll_wait(_epoll, _events.array(), _events.num(), _events.wait_time());
+	for (int i = 0; i < num; i++) {
+		unsigned int event = _events.array()[i].events;
+		handler *hdr = (handler*) _events.array()[i].data.ptr;
+
+		if(event & EPOLLERR){
+			hdr->on_close(ERR_EPOLL_ERROR);
+		}
+
+		if(event & EPOLLIN){
+			//hdr->on_recv();
+		}
+
+		if(event & EPOLLOUT){
+			//hdr->on_send();
+		}
+	}
+}
+
+void worker::run_processing_handlers() {
 	/*get the run time*/
-	time_t tm = time(0);
+	time_t now = time(0);
 
 	/*run all handlers*/
 	map<int, handler*>::iterator iter = _processing_handlers.begin(), iter_end = _processing_handlers.end();
 	while (iter != iter_end) {
+		handler *hdr = (handler*)iter->second;
 		/*check the timer of each handler first*/
-		if (iter->second->is_timeout(tm)) {
-			int err = iter->second->handle_timeout();
-			if (err != 0) {
-				iter->second->handle_close();
+		if (hdr->timer().is_timeout(now)) {
+			if (hdr->on_timeout(now) != 0) {
+				hdr->on_close();
 				_processing_handlers.erase(iter++);
+				delete hdr;
 				continue;
 			}
 		}
 
 		/*recall the handler run of each handler*/
-		int err = iter->second->handle_run(tm);
-		if (err != 0) {
-			iter->second->handle_close();
+		if (hdr->on_running(now) != 0) {
+			hdr->on_close();
 			_processing_handlers.erase(iter++);
+			delete hdr;
+			continue;
 		} else{
 			iter++;
 		}
 	}
 }
 
-void worker::free() {
-	/*free processing handlers*/
-	map<int, handler*>::iterator iter = _processing_handlers.begin(), iter_end = _processing_handlers.end();
-	for (; iter != iter_end; iter++) {
-		iter->second->handle_close();
-	}
-	_processing_handlers.clear();
-
-	/*free pending handlers*/
-	handler *hd = 0;
-	while (_pending_handlers.pop_front(hd)) {
-		hd->handle_close();
-	}
-}
-
-void worker::remove(int sock) {
-	map<int, handler*>::iterator iter = _processing_handlers.find(sock);
-	if (iter != _processing_handlers.end()) {
-		iter->second->handle_close();
-		_processing_handlers.erase(iter);
-	}
-}
-
-void* worker::work_thread(void *arg) {
-	worker* worker = (worker*) arg;
-	struct epoll_event *events = new epoll_event[worker->_epoll_wait_events];
-
-	while (!worker->_worker_stop) {
+void worker::run_loop(){
+	while (!_stop) {
 		/*accept the new handlers in the pending map*/
-		worker->accept();
+		this->accept_pending_handlers();
 
-		/*process the handlers in the epoll*/
-		int num = epoll_wait(worker->_epoll_fd, events, worker->_epoll_wait_events, worker->_epoll_wait_timeout);
-		for (int i = 0; i < num; i++) {
-			int err = 0;
-			handler *hd = (handler*) events[i].data.ptr;
+		/*poll events from epoll and process io operation*/
+		this->poll_processing_handlers();
 
-			if (err == 0 && events[i].events & EPOLLIN)
-				err |= hd->handle_recv();
-
-			if (err == 0 && (events[i].events & EPOLLOUT))
-				err |= hd->handle_send();
-
-			if (err == 0 && (events[i].events & EPOLLRDHUP))
-				err |= hd->handle_shutd();
-
-			if (err == 0 && (events[i].events & EPOLLERR))
-				err |= hd->handle_error(errno);
-
-			if (err != 0)
-				worker->remove(hd->sock());
-		}
-
-		/*give cpu resource to every handlers in the epoll*/
-		worker->run();
+		/*run every processing handler, inlcude timer operation*/
+		this->run_processing_handlers();
 	}
-
-	delete[] events;
-	worker->free();
 
 	pthread_exit(0);
+}
 
+void* worker::work_thread_func(void *arg) {
+	worker* pworker = (worker*) arg;
+	pworker->run_loop();
 	return 0;
 }
 END_SERVICE_TCP_NS

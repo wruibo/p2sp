@@ -7,123 +7,86 @@
 
 #ifndef CUBE_SERVICE_CLIENT_CLIENT_H_
 #define CUBE_SERVICE_CLIENT_CLIENT_H_
-#include <list>
-#include <vector>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
 #include "cube/service/stdns.h"
-#include "cube/service/stdsvc.h"
-#include "cube/service/tcp/client/epoll/worker.h"
-#include "cube/service/tcp/client/epoll/handler.h"
+#include "cube/service/tcp/client/handler.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
-/*active tcp connecting service with epoll under linux*/
+/**
+ * client service for tcp base application
+ */
 class client {
 public:
-	client();
+	/**
+	 * start the client service with specified workers
+	 *@param workers: worker number for the service
+	 *@return:
+	 *	0-success, otherwise failed.
+	 */
+	virtual int start(int workers);
+
+	/**
+	 * build a connection to remote peer
+	 *@param ip: remote peer id
+	 *@param port: remote peer port
+	 *@param hdr: handler for process the connection, !!must be new outside, will be released in the client!!
+	 *@return:
+	 *	0-success, otherwise failed.
+	 */
+	virtual int build(unsigned int ip, unsigned short port, handler *hdr);
+
+	/**
+	 * stop the client service
+	 *@return:
+	 *	0-success, otherwise failed.
+	 */
+	virtual int stop();
+
+public:
+	/**
+	 * create a new instance of the client service
+	 *@return:
+	 *	new instance of client service
+	 */
+	static client* new_instance();
+
+	/**
+	 * return the exist singleton instance of the client service
+	 *@return:
+	 *	singleton instance of client service
+	 */
+	static client* get_instance();
+
 	virtual ~client();
 
-	/*
-	 *	start connector with @worker number int epoll trigger mode
-	 *return:
-	 *	0--success, other--failed.
-	 */
-	int start(int worker_num);
-
-	/*
-	 *	connect to remote peer with @ip:@port in nonblocking mode,
-	 *where the @ip&@port are host byte order, with the handler @hd
-	 *to process the connection.
-	 *@param ip: remote peer ip
-	 *@param port: remote peer port
-	 *@param hd: handler to process the connection
-	 *return:
-	 *	0--success, other--failed.
-	 */
-	int connect(unsigned long ip, unsigned short port, handler *hd);
-
-	/*
-	 *	stop connector service
-	 *return:
-	 *	always return 0
-	 */
-	int stop();
+private:
+	client();
 
 private:
-	/**
-	 * free client resources
-	 */
-	void free();
-
-private:
-	//worker number
-	int _worker_num;
-	//iocp workers for accepter
-	vector<worker*> _workers;
-	//the next handler process worker
-	int _worker_pos;
+	//singleton instance of client service
+	static client* _instance;
 };
 
-client::client() :
-		 _worker_num(0), _worker_pos(0){
+/*initialize the singleton instance of client*/
+static client* client::_instance = 0;
+
+client::client(){
 
 }
 
-client::~client() {
+client::~client(){
+
 }
 
-int client::start(int worker_num) {
-	if(worker_num < 1){
-		return -1;
-	}
-	_worker_num = worker_num;
-
-	/*start epoll io workers*/
-	for (int i = 0; i < _worker_num; i++) {
-		worker *worker = new worker();
-		if (worker->start() != 0){
-			delete worker;
-			free();
-			return -1;
-		}
-		_workers.push_back(worker);
-	}
-
+client* client::new_instance(){
 	return 0;
 }
 
-int client::connect(unsigned long ip, unsigned short port, handler *hd) {
-	/*create socket*/
-	int sock = tcp_connect(ip, port);
-	if(sock < 0){
-		return -1;
+client* client::get_instance(){
+	if(_instance != 0){
+		return _instance;
 	}
-
-	/*set the handler with address information*/
-	hd->sock(sock);
-	hd->remote_ip(ip);
-	hd->remote_port(port);
-
-	/*add the handler to next worker*/
-	_workers[_worker_pos++%_worker_num]->add(hd);
-
 	return 0;
 }
-
-int client::stop() {
-	free();
-	return 0;
-}
-
-void client::free(){
-	for (int i=0; i<_workers.size(); i++) {
-		_workers[i]->stop();
-		delete _workers[i];
-	}
-	_workers.clear();
-}
-
 END_SERVICE_TCP_NS
 #endif /* CUBE_SERVICE_EPOLL_CONNECTOR_H_ */
