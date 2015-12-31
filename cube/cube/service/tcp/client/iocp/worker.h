@@ -7,85 +7,278 @@
 
 #ifndef CUBE_SERVICE_IOCP_WORKER_H_
 #define CUBE_SERVICE_IOCP_WORKER_H_
+#include <Winsock2.h>
 #include <map>
-#include "cube/service/util/win/queue.h"
-#include "cube/service/tcp/iocp/handler.h"
-namespace cube {
-namespace service {
-using namespace std;
+#include <process.h>
 
+#include "cube/service/util/cdeque.h"
+#include "cube/service/tcp/client/handler.h"
+#include "cube/service/tcp/client/iocp/olpdata.h"
+
+BEGIN_SERVICE_TCP_NS
+using namespace std;
 class worker {
 public:
-	worker(void);
+	worker();
 	virtual ~worker(void);
 
-	//stop iocp worker
-	int start(int maxconns, int maxevents, int maxwaitm);
+	/**
+	 *start the worker for processing the connected peers
+	 *@return
+	 *	0-success, otherwise for failed
+	 */
+	int start();
 
-	//stop iocp worker
+	/**
+	 * dispatch a new connection peer handler to the worker
+	 * @param sock: socket for the connection
+	 * @param hd: handler for process the connection
+	 * @return:
+	 * 	0-success, otherwise for failed
+	 */
+	void dispatch(handler *hd);
+
+	/**
+	 * stop the worker
+	 */
 	int stop();
 
-	//dispatch a iocp handler to this worker
-	int dispatch(handler *hd);
-
-	//concurrent connections in the worker
-	unsigned int concurrency();
-
 private:
-	//accept the new connection dispatched from accepter
-	int accept();
+	/**
+	 * remove a handler with socket @s from handle list
+	 */
+	void remove(int sock);
 
-	//remove a handler with socket @s from handle list
-	int remove(SOCKET s);
+	/**
+	 * free all handlers
+	 */
+	void free();
 
-	//run all handlers
-	void run_handlers();
+	/**
+	 * accept the new connection dispatched from connector
+	 */
+	void accept_pending_handlers();
 
-	//free all handlers
-	void free_handlers();
+	/**
+	 * poll all processing handlers from epoll, process io operation
+	 */
+	void poll_processing_handlers();
 
-	//get handler relate with socket
-	handler *get_handler(SOCKET s);
+	/**
+	 * process timeout event & give run for every processing handler
+	 */
+	void run_processing_handlers();
 
-	//reset the concurrency
-	void reset_concurrency();
+	/**
+	 * loop for work thread
+	 */
+	void run_loop();
 
-	//iocp worker thread
-	static unsigned __stdcall work_thread(void *arg);
+	/**
+	 * thread function for worker
+	 */
+	static unsigned* work_thread_func(void *arg);
 
 private:
 	//IOCP handler
 	HANDLE _iocp;
 
-	//pending handlers wait for add the iocp
-	queue _pendq;
-
-	//handler list in the iocp
-	map<SOCKET, handler*> _handlers;
+	//pending handlers waiting for add to worker
+	cdeque<handler*> _pending_handlers;
+	//processing handlers in the worker
+	map<int, handler*> _processing_handlers;
 
 	//worker thread handler
-	HANDLE _hdl;
-	//worker thread id
-	unsigned _thread_id;
+	HANDLE _thread;
+	unsigned int _thread_id;
 	//stop flag for worker thread
-	bool _worker_stop;
-
-	//max concurrence connections for the worker
-	int _max_conns;
-	//max events processed per time for worker
-	int _max_events;
-	//max wait time for the get iocp status
-	int _max_waittm;
-
-	//concurrent connections
-	volatile unsigned int _concurrency;
+	bool _stop;
 };
 
-typedef enum {
-	round, least
-} dispatch_t;
-
-}
+worker::worker(): _iocp(INVALID_HANDLE_VALUE), _thread(INVALID_HANDLE_VALUE), _thread_id(0), _stop(true){
 }
 
+worker::~worker(void) {
+}
+
+int worker::start() {
+	/*create io complete port*/
+	_iocp = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
+	if(_iocp == NULL){
+		return -1; //create iocp failed.
+	}
+
+	/*start worker thread*/
+	_stop = false;
+	_thread = (HANDLE)::_beginthreadex(NULL, 0, work_thread_func, this, &_thread_id);
+	if(_thread == NULL){
+		_stop = true;
+		return -1;
+	}
+
+	return 0;
+}
+
+void worker::dispatch(handler *hd) {
+	_pending_handlers.push_back(hd);
+}
+
+int worker::stop() {
+	if(_stop){
+		return -1;
+	}
+
+	/*stop worker thread*/
+	_stop = true;
+	::WaitForSingleObject(_thread, INFINITE);
+
+	/*free all handlers*/
+	this->free();
+
+	/*close iocp handle*/
+	::CloseHandle(_iocp);
+
+	return 0;
+}
+
+void worker::remove(int sock) {
+	map<int, handler*>::iterator iter = _processing_handlers.find(sock);
+	if (iter != _processing_handlers.end()) {
+		_processing_handlers.erase(iter);
+	}
+}
+
+void worker::free() {
+	/*free processing handlers*/
+	map<int, handler*>::iterator iter = _processing_handlers.begin(), iterend = _processing_handlers.end();
+	while(iter != iterend){
+		iter->second->on_close(ERR_TERMINATE_SESSION);
+		delete *iter;
+		iter++;
+	}
+	_processing_handlers.clear();
+
+	/*free pending handlers*/
+	handler *hdr = 0;
+	while (_pending_handlers.pop_front(hdr)) {
+		hdr->on_close(ERR_TERMINATE_SESSION);
+		delete hdr;
+	}
+}
+
+void worker::accept_pending_handlers() {
+	handler *hdr = 0;
+	while(_pending_handlers.pop_front(hdr)){
+		if (hdr->on_open() != 0) {
+			/*recall on open failed*/
+			hdr->on_close(ERR_TERMINATE_SESSION);
+			delete hdr;
+		} else {
+			/*add the handler to iocp*/
+			if (::CreateIoCompletionPort((HANDLE)hdr->sock(), __iocp, (ULONG_PTR)hdr, 0) == NULL) {
+				hdr->on_close(ERR_IOCP_ADD_FAILED);
+				delete hdr;
+			} else{
+				_processing_handlers.insert(pair<int, handler*>(hdr->sock(), hdr));
+			}
+		}
+	}
+}
+
+void worker::poll_processing_handlers() {
+	DWORD transfered = 0;
+	handler *hdr = 0;
+	olpdata *olp = 0;
+	while(true){
+		if(::GetQueuedCompletionStatus(_iocp, &transfered, (PULONG_PTR)&hdr, (LPOVERLAPPED*)&olp, 5)){
+			if(olp->_opt == olpdata::RECV){
+				/*receiving data has completed*/
+				if(hdr->on_recv(olp->_data, transfered) != 0){
+					hdr->on_close(ERR_TERMINATE_SESSION);
+					this->remove(hdr->sock());
+					delete hdr;
+				}else{
+					/*add new receiving request*/
+					hdr->async_recv();
+				}
+			}else{
+				/*sending data has completed*/
+				if(hdr->on_send(transfered) != 0){
+					hdr->on_close(ERR_TERMINATE_SESSION);
+					this->remove(hdr->sock());
+					delete hdr;
+				}
+			}
+			/*free overlapped object*/
+			delete olp;
+		}else{
+			if(olp == 0){/*may be timeout*/
+				if(WSAGetLastError() == WSA_WAIT_TIMEOUT){
+					break;
+				}
+			} else { /*something error happened*/
+				/*free handler*/
+				hdr->on_close(ERR_TERMINATE_SESSION);
+				delete hdr;
+
+				/*free overlapped object*/
+				delete olp;
+			}
+		}
+	}
+
+
+}
+
+void worker::run_processing_handlers() {
+	/*get the run time*/
+	time_t now = time(0);
+
+	/*run all handlers*/
+	map<int, handler*>::iterator iter = _processing_handlers.begin(), iter_end = _processing_handlers.end();
+	while (iter != iter_end) {
+		handler *hdr = (handler*)iter->second;
+		/*check the timer of each handler first*/
+		if (hdr->is_timeout(now)) {
+			if (hdr->on_timeout(now) != 0) {
+				hdr->on_close(ERR_TERMINATE_SESSION);
+				_processing_handlers.erase(iter++);
+				delete hdr;
+				continue;
+			}
+		}
+
+		/*recall the handler run of each handler*/
+		if (hdr->on_running(now) != 0) {
+			hdr->on_close(ERR_TERMINATE_SESSION);
+			_processing_handlers.erase(iter++);
+			delete hdr;
+			continue;
+		} else{
+			iter++;
+		}
+	}
+}
+
+void worker::run_loop(){
+	while (!_stop) {
+		/*accept the new handlers in the pending map*/
+		this->accept_pending_handlers();
+
+		/*poll events from epoll and process io operation*/
+		this->poll_processing_handlers();
+
+		/*run every processing handler, inlcude timer operation*/
+		this->run_processing_handlers();
+	}
+
+	_endthreadex(0);
+}
+
+unsigned* worker::work_thread_func(void *arg) {
+	worker* pworker = (worker*) arg;
+	pworker->run_loop();
+	return 0;
+}
+END_SERVICE_TCP_NS
 #endif /* CUBE_SERVICE_IOCP_WORKER_H_ */

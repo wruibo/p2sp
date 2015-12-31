@@ -12,9 +12,6 @@
 #include "cube/service/tcp/client/session.h"
 BEGIN_SERVICE_TCP_NS
 class handler{
-	friend class worker;
-	friend class connector;
-
 public:
 	/*
 	 * called after the connection has been built successfully.
@@ -62,14 +59,62 @@ public:
 	 *	0--success, other--failed
 	 */
 	virtual int on_close(int err);
-
 public:
 	handler();
 	virtual ~handler(void);
 
-protected:
-	timer&  timer();
-	session& session();
+	/**
+	 * set&get the socket of session
+	 */
+	void sock(SOCKET s);
+	SOCKET sock();
+
+	/**
+	 * set&get the remote ip of session
+	 */
+	void remote_ip(unsigned int ip);
+	unsigned int remote_ip();
+
+	/**
+	 * set&get the remote port of session
+	 */
+	void remote_port(unsigned short port);
+	unsigned short remote_port();
+
+	/**
+	 * set timer which will be triggered after specified delay seconds
+	 */
+	void set_timer(int delay_seconds);
+	/**
+	 * check if timer has been triggered
+	 */
+	bool is_timeout(time_t now);
+
+public:
+	/**
+	 *	send data to remote peer
+	 *@param data: data to send
+	 *@param sz: size of data in bytes
+	 *@return
+	 *	data size sent or <0 indicate an error
+	 */
+	int send(const void* data, int sz);
+
+	/**
+	 * request receive data action from remote peer
+	 */
+	int recv();
+
+public:
+	/**
+	 * process the data sending job
+	 */
+	void do_send();
+
+	/**
+	 * process the data receiving job
+	 */
+	void do_recv();
 
 private:
 	//timer for handler;
@@ -87,14 +132,53 @@ handler::~handler(){
 
 }
 
-timer& handler::timer(){
-	return _timer;
+void handler::sock(SOCKET s){
+	_session.sock(s);
 }
 
-session& handler::session(){
-	return _session;
+SOCKET handler::sock(){
+	return _session.sock();
 }
 
+void handler::remote_ip(unsigned int ip){
+	_session.remote_ip(ip);
+}
+
+unsigned int handler::remote_ip(){
+	return _session.remote_ip();
+}
+
+void handler::remote_port(unsigned short port){
+	_session.remote_port(port);
+}
+
+unsigned short handler::remote_port(){
+	return _session.remote_port();
+}
+
+void handler::set_timer(int delay_seconds){
+	_timer.set(delay_seconds);
+}
+
+bool handler::is_timeout(time_t now){
+	return _timer.is_timeout(now);
+}
+
+int handler::send(const void* data, int sz){
+	return _session.send(data, sz);
+}
+
+int handler::recv(){
+	return 0;
+}
+
+void handler::do_send(){
+
+}
+
+void handler::do_recv(){
+
+}
 END_SERVICE_TCP_NS
 
 #endif /* CUBE_SERVICE_TCP_CLIENT_HANDLER_H_ */

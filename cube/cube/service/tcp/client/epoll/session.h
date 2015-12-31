@@ -8,19 +8,12 @@
 #ifndef CUBE_SERVICE_TCP_CLIENT_EPOLL_SESSION_H_
 #define CUBE_SERVICE_TCP_CLIENT_EPOLL_SESSION_H_
 #include "cube/service/stdns.h"
+#include "cube/service/stdsvc.h"
 BEGIN_SERVICE_TCP_NS
 class session{
 public:
 	session();
 	virtual ~session();
-
-	/**
-	 * initialize the session data
-	 *@param sock: tcp socket for the session
-	 *@param ip: remote peer ip
-	 *@param port:remote peer port
-	 */
-	void init(int sock, unsigned int ip, unsigned short port);
 
 	/**
 	 *	send data to remote peer
@@ -31,20 +24,22 @@ public:
 	 */
 	int send(const void* data, unsigned int sz);
 
+	/**
+	 * set&get the socket of the session
+	 */
+	void sock(SOCKET s);
+	SOCKET sock() const;
 
 	/**
-	 * get the socket of the session
+	 * set&get the remote peer ip
 	 */
-	int sock() const;
-
-	/**
-	 * get the remote peer ip
-	 */
+	void remote_ip(unsigned int ip);
 	unsigned int remote_ip() const;
 
 	/**
-	 * get the remote peer port
+	 * set&get the remote peer port
 	 */
+	void remote_port(unsigned short port);
 	unsigned short remote_port() const;
 
 private:
@@ -66,22 +61,29 @@ session::~session(){
 	}
 }
 
-void session::init(int sock, unsigned int ip, unsigned short port){
-	_sock = sock;
-	_remote_ip = ip;
-	_remote_port = port;
-}
-
 int session::send(const void* data, unsigned int sz){
+
 	return 0;
 }
 
-int session::sock() const{
+void session::sock(SOCKET s){
+	_sock = s;
+}
+
+SOCKET session::sock() const{
 	return _sock;
+}
+
+void session::remote_ip(unsigned int ip){
+	_remote_ip = ip;
 }
 
 unsigned int session::remote_ip() const{
 	return _remote_ip;
+}
+
+void session::remote_port(unsigned short port){
+	_remote_port = port;
 }
 
 unsigned short session::remote_port() const{

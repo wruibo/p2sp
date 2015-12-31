@@ -144,9 +144,7 @@ int worker::stop() {
 void worker::remove(int sock) {
 	map<int, handler*>::iterator iter = _processing_handlers.find(sock);
 	if (iter != _processing_handlers.end()) {
-		iter->second->on_close();
 		_processing_handlers.erase(iter);
-		delete *iter;
 	}
 }
 
@@ -154,7 +152,7 @@ void worker::free() {
 	/*free processing handlers*/
 	map<int, handler*>::iterator iter = _processing_handlers.begin(), iterend = _processing_handlers.end();
 	while(iter != iterend){
-		iter->second->on_close();
+		iter->second->on_close(ERR_TERMINATE_SESSION);
 		delete *iter;
 		iter++;
 	}
@@ -163,7 +161,8 @@ void worker::free() {
 	/*free pending handlers*/
 	handler *hdr = 0;
 	while (_pending_handlers.pop_front(hdr)) {
-		hdr->on_close();
+		hdr->on_close(ERR_TERMINATE_SESSION);
+		delete hdr;
 	}
 }
 
@@ -173,18 +172,18 @@ void worker::accept_pending_handlers() {
 		if (hdr->on_open() != 0) {
 			/*recall on open failed*/
 			hdr->on_close(ERR_TERMINATE_SESSION);
-			delete *hdr;
+			delete hdr;
 		} else {
 			/*add the handler to epoll*/
 			struct epoll_event ev;
 			ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
 			ev.data.ptr = hdr;
 
-			if (epoll_ctl(_epoll, EPOLL_CTL_ADD, hdr->session().sock(), &ev) < 0) {
+			if (epoll_ctl(_epoll, EPOLL_CTL_ADD, hdr->sock(), &ev) < 0) {
 				hdr->on_close(ERR_EPOLL_ADD_FAILED);
-				delete *hdr;
+				delete hdr;
 			} else{
-				_processing_handlers.insert(pair<int, handler*>(hdr->session().sock(), hdr));
+				_processing_handlers.insert(pair<int, handler*>(hdr->sock(), hdr));
 			}
 		}
 	}
@@ -199,14 +198,16 @@ void worker::poll_processing_handlers() {
 
 		if(event & EPOLLERR){
 			hdr->on_close(ERR_EPOLL_ERROR);
-		}
+			this->remove(hdr->sock());
+			delete hdr;
+		}else{
+			if(event & EPOLLIN){
+				hdr->do_recv();
+			}
 
-		if(event & EPOLLIN){
-			//hdr->on_recv();
-		}
-
-		if(event & EPOLLOUT){
-			//hdr->on_send();
+			if(event & EPOLLOUT){
+				hdr->do_send();
+			}
 		}
 	}
 }
@@ -220,9 +221,9 @@ void worker::run_processing_handlers() {
 	while (iter != iter_end) {
 		handler *hdr = (handler*)iter->second;
 		/*check the timer of each handler first*/
-		if (hdr->timer().is_timeout(now)) {
+		if (hdr->is_timeout(now)) {
 			if (hdr->on_timeout(now) != 0) {
-				hdr->on_close();
+				hdr->on_close(ERR_TERMINATE_SESSION);
 				_processing_handlers.erase(iter++);
 				delete hdr;
 				continue;
@@ -231,7 +232,7 @@ void worker::run_processing_handlers() {
 
 		/*recall the handler run of each handler*/
 		if (hdr->on_running(now) != 0) {
-			hdr->on_close();
+			hdr->on_close(ERR_TERMINATE_SESSION);
 			_processing_handlers.erase(iter++);
 			delete hdr;
 			continue;

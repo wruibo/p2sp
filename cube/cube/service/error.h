@@ -17,5 +17,7 @@ static const int ERR_CONNECT_FAILED = -2001;
 static const int ERR_EPOLL_ADD_FAILED = -3001;
 static const int ERR_EPOLL_ERROR = -3002;
 
+static const int ERR_IOCP_ADD_FAILED = -4001;
+
 END_SERVICE_NS
 #endif /* CUBE_SERVICE_ERROR_H_ */

@@ -149,7 +149,9 @@ int connector::connect(unsigned int ip, unsigned short port, handler* hdr){
 	}
 
 	/*set the session property of the handler*/
-	hdr->session().init(sock, ip, port);
+	hdr->sock(sock);
+	hdr->remote_ip(ip);
+	hdr->remote_port(port);
 
 	/*track the connect result for the handler*/
 	if(this->track(hdr) != 0){
@@ -169,7 +171,7 @@ int connector::stop(){
 	pthread_join(_thread, 0);
 
 	/*free handler resources*/
-	free();
+	this->free();
 
 	/*close epoll handler*/
 	::close(_epoll);
@@ -182,7 +184,7 @@ int connector::track(handler *hdr){
 	struct epoll_event ev;
 	ev.events = EPOLLOUT|EPOLLET;
 	ev.data.ptr = hdr;
-	if(epoll_ctl(_epoll, EPOLL_CTL_ADD, hdr->session().sock(), &ev) < 0){
+	if(epoll_ctl(_epoll, EPOLL_CTL_ADD, hdr->sock(), &ev) < 0){
 		return -1;
 	}
 
@@ -195,7 +197,7 @@ int connector::track(handler *hdr){
 
 void connector::untrack(handler *hdr){
 	/*remove handler from epoll*/
-	epoll_ctl(_epoll, EPOLL_CTL_DEL, hdr->session().sock(), 0);
+	epoll_ctl(_epoll, EPOLL_CTL_DEL, hdr->sock(), 0);
 
 	/*remote handler from pending list*/
 	pthread_mutex_lock(&_pending_handlers_mutex);
@@ -215,6 +217,7 @@ void connector::free(){
 	std::list<handler*>::iterator iter = _pending_handlers.begin(), iterend = _pending_handlers.end();
 	while(iter != iterend){
 		(*iter)->on_close(ERR_TERMINATE_SESSION);
+		delete *iter;
 		iter++;
 	}
 	_pending_handlers.clear();
@@ -248,10 +251,10 @@ void connector::wait_for_next_loop() {
 void connector::run_loop(){
 	while(!_stop){
 		/*process the tracked handlers*/
-		process_tracked_handlers();
+		this->process_tracked_handlers();
 
 		/*wait for the next loop*/
-		wait_for_next_loop();
+		this->wait_for_next_loop();
 	}
 
 	pthread_exit(0);

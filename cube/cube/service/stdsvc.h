@@ -15,6 +15,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#define SOCKET int
 #elif defined(__WIN32__)
 #include <WinSock2.h>
 #include <Windows.h>
