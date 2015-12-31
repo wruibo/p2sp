@@ -8,19 +8,19 @@
 #ifndef CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
 #define CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
 #include <unistd.h>
+#include <pthread.h>
 
 #include "cube/service/stdns.h"
 #include "cube/service/stdsvc.h"
-#include "cube/service/tcp/client/client.h"
-#include "cube/service/tcp/client/epoll/workers.h"
+#include "cube/service/tcp/epoll/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
 /*client service using epoll under linux*/
-class eclient : public client{
+class client{
 public:
-	eclient();
-	virtual ~eclient();
+	client();
+	virtual ~client();
 
 	/**
 	 * start the client service with specified workers
@@ -80,14 +80,14 @@ private:
 	bool _stop;
 };
 
-eclient::eclient(): _thread(0), _stop(true) {
+client::client(): _thread(0), _stop(true) {
 
 }
 
-eclient::~eclient() {
+client::~client() {
 }
 
-int eclient::start(int workers) {
+int client::start(int workers) {
 	/*check if client has been started*/
 	if(!_stop){
 		return 0;
@@ -113,11 +113,11 @@ int eclient::start(int workers) {
 	return 0;
 }
 
-int eclient::build(unsigned int ip, unsigned short port, handler *hdr){
+int client::build(unsigned int ip, unsigned short port, handler *hdr){
 	return _connector.connect(ip, port, hdr);
 }
 
-int eclient::stop() {
+int client::stop() {
 	/*check current client status*/
 	if(_stop){
 		return 0;
@@ -136,22 +136,22 @@ int eclient::stop() {
 	return 0;
 }
 
-void eclient::wait_for_next_loop(){
+void client::wait_for_next_loop(){
 	/*wait for 5ms*/
 	::usleep(5000);
 }
 
-void eclient::run_loop(){
+void client::run_loop(){
 	while(!_stop){
 		/*wait a tiny time for next loop*/
 		wait_for_next_loop();
 	}
-	pthread_exit(0);
 }
 
-void* eclient::client_thread_func(void* arg){
-	eclient *pclient = (eclient*)arg;
+void* client::client_thread_func(void* arg){
+	client *pclient = (client*)arg;
 	pclient->run_loop();
+	pthread_exit(0);
 	return 0;
 }
 END_SERVICE_TCP_NS

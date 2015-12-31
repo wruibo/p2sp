@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_EPOLL_CONNECTOR_H_
-#define CUBE_SERVICE_TCP_CLIENT_EPOLL_CONNECTOR_H_
+#ifndef CUBE_SERVICE_TCP_EPOLL_CONNECTOR_H_
+#define CUBE_SERVICE_TCP_EPOLL_CONNECTOR_H_
 #include <list>
 #include <pthread.h>
 #include <sys/epoll.h>
@@ -15,9 +15,9 @@
 #include "cube/service/error.h"
 #include "cube/service/util/socket.h"
 #include "cube/service/util/cdeque.h"
-#include "cube/service/tcp/client/handler.h"
-#include "cube/service/tcp/client/epoll/events.h"
-#include "cube/service/tcp/client/epoll/workers.h"
+#include "cube/service/tcp/handler.h"
+#include "cube/service/tcp/epoll/events.h"
+#include "cube/service/tcp/epoll/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 class connector{
@@ -266,4 +266,4 @@ void* connector::connect_thread_func(void* arg){
 }
 END_SERVICE_TCP_NS
 
-#endif /* CUBE_SERVICE_TCP_CLIENT_EPOLL_CONNECTOR_H_ */
+#endif /* CUBE_SERVICE_TCP_EPOLL_CONNECTOR_H_ */

@@ -13,13 +13,49 @@
 
 BEGIN_SERVICE_NS
 static int set_nonblock(int fd) {
-	int opts = fcntl(fd, F_GETFL);
+	int opts = ::fcntl(fd, F_GETFL);
 	if (opts < 0)
 		return -1;
 	opts = opts | O_NONBLOCK;
 	if (fcntl(fd, F_SETFL, opts) < 0)
 		return -1;
 	return 0;
+}
+
+static int set_reuse_addr(int sock) {
+	int on = 1;
+	if (::setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0)
+		return -1;
+	return 0;
+}
+
+static int tcp_create(unsigned int ip, unsigned short port) {
+	/*create socket*/
+	int sock = ::socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == -1) {
+		return -1; //initial socket error
+	}
+
+	/*set reuse address*/
+	if(set_reuse_addr(sock) != 0){
+		::close(sock);
+		return -1;
+	}
+
+	/*set local address*/
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(_listen_port);
+	addr.sin_addr.s_addr = htonl(ip);
+
+	/*bind socket to local address*/
+	if (::bind(sock, (struct sockaddr *) &addr, sizeof(addr)) != 0){
+		::close(sock);
+		return -1;
+	}
+
+	return sock;
 }
 
 /**

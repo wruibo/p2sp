@@ -5,19 +5,19 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_IOCP_CONNECTOR_H_
-#define CUBE_SERVICE_TCP_CLIENT_IOCP_CONNECTOR_H_
+#ifndef CUBE_SERVICE_TCP_IOCP_CONNECTOR_H_
+#define CUBE_SERVICE_TCP_IOCP_CONNECTOR_H_
+#include <Winsock2.h>
+#include <Windows.h>
 
 #include <list>
 #include <process.h>
-#include <Winsock2.h>
-#include <Windows.h>
 
 #include "cube/service/stdns.h"
 #include "cube/service/error.h"
 #include "cube/service/util/socket.h"
-#include "cube/service/tcp/client/handler.h"
-#include "cube/service/tcp/client/iocp/workers.h"
+#include "cube/service/tcp/handler.h"
+#include "cube/service/tcp/iocp/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 class connector{
@@ -282,4 +282,4 @@ unsigned* connector::connect_thread_func(void* arg){
 END_SERVICE_TCP_NS
 
 
-#endif /* CUBE_SERVICE_TCP_CLIENT_IOCP_CONNECTOR_H_ */
+#endif /* CUBE_SERVICE_TCP_IOCP_CONNECTOR_H_ */

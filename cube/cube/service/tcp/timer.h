@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_TIMER_H_
-#define CUBE_SERVICE_TCP_CLIENT_TIMER_H_
+#ifndef CUBE_SERVICE_TCP_TIMER_H_
+#define CUBE_SERVICE_TCP_TIMER_H_
 #include <time.h>
 #include "cube/service/stdns.h"
 BEGIN_SERVICE_TCP_NS
@@ -47,4 +47,4 @@ bool timer::is_timeout(time_t now) {
 	return true;
 }
 END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_CLIENT_TIMER_H_ */
+#endif /* CUBE_SERVICE_TCP_TIMER_H_ */

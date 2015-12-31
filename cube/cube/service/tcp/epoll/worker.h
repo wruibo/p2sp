@@ -5,16 +5,16 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_EPOLL_WORKER_H_
-#define CUBE_SERVICE_TCP_CLIENT_EPOLL_WORKER_H_
-
+#ifndef CUBE_SERVICE_TCP_EPOLL_WORKER_H_
+#define CUBE_SERVICE_TCP_EPOLL_WORKER_H_
 #include <map>
+#include <time.h>
 #include <pthread.h>
 #include <sys/epoll.h>
 
 #include "cube/service/util/cdeque.h"
-#include "cube/service/tcp/client/handler.h"
-#include "cube/service/tcp/client/epoll/events.h"
+#include "cube/service/tcp/handler.h"
+#include "cube/service/tcp/epoll/events.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
@@ -201,12 +201,36 @@ void worker::poll_processing_handlers() {
 			this->remove(hdr->sock());
 			delete hdr;
 		}else{
-			if(event & EPOLLIN){
-				hdr->do_recv();
+			if(event & EPOLLIN) {
+				/*receive data until there is not data could be received*/
+				void* data = 0;
+				unsigned int recv_sz = 0;
+				while(hdr->redo_recv(&data, &recv_sz)) {
+					if(hdr->on_recv(data, recv_sz) != 0){
+						hdr->on_close(ERR_TERMINATE_SESSION);
+						this->remove(hdr->sock());
+						delete hdr;
+						break;
+					}
+
+					/*reset receive data buffer*/
+					delete data;
+					data = 0;
+					recv_sz = 0;
+				}
 			}
 
 			if(event & EPOLLOUT){
-				hdr->do_send();
+				/*send data until there is no data could be sent*/
+				unsigned int send_sz = 0;
+				while(hdr->redo_send(&send_sz)) {
+					if(hdr->on_send(send_sz) != 0) {
+						hdr->on_close(ERR_TERMINATE_SESSION);
+						this->remove(hdr->sock());
+						delete hdr;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -214,7 +238,7 @@ void worker::poll_processing_handlers() {
 
 void worker::run_processing_handlers() {
 	/*get the run time*/
-	time_t now = time(0);
+	time_t now = ::time(0);
 
 	/*run all handlers*/
 	map<int, handler*>::iterator iter = _processing_handlers.begin(), iter_end = _processing_handlers.end();

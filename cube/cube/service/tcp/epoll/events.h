@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_EPOLL_EVENTS_H_
-#define CUBE_SERVICE_TCP_CLIENT_EPOLL_EVENTS_H_
+#ifndef CUBE_SERVICE_TCP_EPOLL_EVENTS_H_
+#define CUBE_SERVICE_TCP_EPOLL_EVENTS_H_
 #include <sys/epoll.h>
 
 #include "cube/service/stdns.h"
@@ -53,4 +53,4 @@ int events::wait_time(){
 	return _wait_time;
 }
 END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_CLIENT_EPOLL_EVENTS_H_ */
+#endif /* CUBE_SERVICE_TCP_EPOLL_EVENTS_H_ */

@@ -9,16 +9,15 @@
 
 #include "cube/service/stdns.h"
 #include "cube/service/stdsvc.h"
-#include "cube/service/tcp/client/client.h"
-#include "cube/service/tcp/client/iocp/workers.h"
+#include "cube/service/tcp/iocp/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
 /*client service using io complete port under windows*/
-class cclient : public client{
+class client{
 public:
-	cclient();
-	virtual ~cclient();
+	client();
+	virtual ~client();
 
 	/**
 	 * start the client service with specified workers
@@ -79,14 +78,14 @@ private:
 	bool _stop;
 };
 
-cclient::cclient(): _thread(NULL), _thread_id(0), _stop(true) {
+client::client(): _thread(NULL), _thread_id(0), _stop(true) {
 
 }
 
-cclient::~cclient() {
+client::~client() {
 }
 
-int cclient::start(int workers) {
+int client::start(int workers) {
 	/*check if client has been started*/
 	if(!_stop){
 		return 0;
@@ -113,11 +112,11 @@ int cclient::start(int workers) {
 	return 0;
 }
 
-int cclient::build(unsigned int ip, unsigned short port, handler *hdr){
+int client::build(unsigned int ip, unsigned short port, handler *hdr){
 	return _connector.connect(ip, port, hdr);
 }
 
-int cclient::stop() {
+int client::stop() {
 	/*check current client status*/
 	if(_stop){
 		return 0;
@@ -137,12 +136,12 @@ int cclient::stop() {
 	return 0;
 }
 
-void cclient::wait_for_next_loop(){
+void client::wait_for_next_loop(){
 	/*wait for 5ms*/
 	::Sleep(5);
 }
 
-void cclient::run_loop(){
+void client::run_loop(){
 	while(!_stop){
 		/*wait a tiny time for next loop*/
 		wait_for_next_loop();
@@ -150,8 +149,8 @@ void cclient::run_loop(){
 	::_endthreadex(0);
 }
 
-unsigned* cclient::client_thread_func(void* arg){
-	cclient *pclient = (cclient*)arg;
+unsigned* client::client_thread_func(void* arg){
+	client *pclient = (client*)arg;
 	pclient->run_loop();
 	return 0;
 }

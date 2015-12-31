@@ -5,11 +5,12 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_HANDLER_H_
-#define CUBE_SERVICE_TCP_CLIENT_HANDLER_H_
+#ifndef CUBE_SERVICE_TCP_HANDLER_H_
+#define CUBE_SERVICE_TCP_HANDLER_H_
 #include "cube/service/stdns.h"
-#include "cube/service/tcp/client/timer.h"
-#include "cube/service/tcp/client/session.h"
+#include "cube/service/tcp/timer.h"
+#include "cube/service/tcp/session.h"
+
 BEGIN_SERVICE_TCP_NS
 class handler{
 public:
@@ -18,7 +19,7 @@ public:
 	 *@return:
 	 *	0--success, other--failed, handler will be destroyed
 	 */
-	virtual int on_open();
+	virtual int on_open(void *arg = 0);
 
 	/*
 	 *	called after the data has been sent
@@ -26,7 +27,7 @@ public:
 	 *@return:
 	 *	0--success, other--failed, handler will be destroyed
 	 */
-	virtual int on_send(int sz);
+	virtual int on_send(unsigned int sz);
 
 	/*
 	 *	called after the data has been received
@@ -90,7 +91,7 @@ public:
 	 */
 	bool is_timeout(time_t now);
 
-public:
+protected:
 	/**
 	 *	send data to remote peer
 	 *@param data: data to send
@@ -103,18 +104,25 @@ public:
 	/**
 	 * request receive data action from remote peer
 	 */
-	int recv();
+	int recv(int sz);
 
 public:
 	/**
 	 * process the data sending job
+	 * @param send_sz: data size has been sent
+	 * @return:
+	 * 	true-it need to continue sending, false-send job completed
 	 */
-	void do_send();
+	bool redo_send(unsigned int *send_sz);
 
 	/**
 	 * process the data receiving job
+	 * @param data: data received, need to be released after use outside
+	 * @param recv_sz: data size received
+	 * @return:
+	 * true-it need to be continue receiving, false-receive job completed
 	 */
-	void do_recv();
+	bool redo_recv(void** data, unsigned int *recv_sz);
 
 private:
 	//timer for handler;
@@ -168,17 +176,17 @@ int handler::send(const void* data, int sz){
 	return _session.send(data, sz);
 }
 
-int handler::recv(){
-	return 0;
+int handler::recv(int sz){
+	return _session.recv(sz);
 }
 
-void handler::do_send(){
-
+bool handler::redo_send(unsigned int *send_sz) {
+	return _session.redo_send(send_sz);
 }
 
-void handler::do_recv(){
-
+bool handler::redo_recv(void** data, unsigned int *recv_sz) {
+	return _session.redo_recv(data, recv_sz);
 }
 END_SERVICE_TCP_NS
 
-#endif /* CUBE_SERVICE_TCP_CLIENT_HANDLER_H_ */
+#endif /* CUBE_SERVICE_TCP_HANDLER_H_ */

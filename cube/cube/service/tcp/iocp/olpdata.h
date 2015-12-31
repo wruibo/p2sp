@@ -5,8 +5,9 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_IOCP_OLPDATA_H_
-#define CUBE_SERVICE_TCP_CLIENT_IOCP_OLPDATA_H_
+#ifndef CUBE_SERVICE_TCP_IOCP_OLPDATA_H_
+#define CUBE_SERVICE_TCP_IOCP_OLPDATA_H_
+#include <Winsock2.h>
 #include "cube/service/stdns.h"
 BEGIN_SERVICE_TCP_NS
 class olpdata{
@@ -18,27 +19,26 @@ public:
 
 public:
 	OVERLAPPED _overlapped;
-	void* _data;
-	unsigned int _size;
+	WSABUF _data;
 	option _opt;
 };
 
 olpdata::olpdata(unsigned int size){
-	_size = size;
-	_data = new char[size];
+	_data.len = size;
+	_data.buf = new char[size];
 	_opt = olpdata::RECV;
 }
 olpdata::olpdata(const void* data, unsigned int size){
-	_size = size;
-	_data = new char[size];
+	_data.len = size;
+	_data.buf = new char[size];
 	_opt = olpdata::SEND;
-	::memcpy(_data, data, size);
+	::memcpy(_data.buf, data, size);
 }
 
 olpdata::~olpdata(){
-	delete []_data;
-	_size = 0;
+	delete []_data.buf;
+	_data.len = 0;
 }
 
 END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_CLIENT_IOCP_OLPDATA_H_ */
+#endif /* CUBE_SERVICE_TCP_IOCP_OLPDATA_H_ */

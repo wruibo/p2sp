@@ -5,14 +5,14 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_CLIENT_EPOLL_WORKERS_H_
-#define CUBE_SERVICE_TCP_CLIENT_EPOLL_WORKERS_H_
+#ifndef CUBE_SERVICE_TCP_IOCP_WORKERS_H_
+#define CUBE_SERVICE_TCP_IOCP_WORKERS_H_
 #include <list>
 #include <vector>
 
 #include "cube/service/stdns.h"
-#include "cube/service/tcp/client/handler.h"
-#include "cube/service/tcp/client/epoll/worker.h"
+#include "cube/service/tcp/handler.h"
+#include "cube/service/tcp/iocp/worker.h"
 
 BEGIN_SERVICE_TCP_NS
 class workers{
@@ -83,5 +83,4 @@ int workers::stop(){
 	return 0;
 }
 END_SERVICE_TCP_NS
-
-#endif /* CUBE_SERVICE_TCP_CLIENT_EPOLL_WORKERS_H_ */
+#endif /* CUBE_SERVICE_TCP_IOCP_WORKERS_H_ */

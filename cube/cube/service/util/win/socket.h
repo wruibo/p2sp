@@ -22,6 +22,28 @@ static int set_nonblock(SOCKET sock) {
 	return 0;
 }
 
+static SOCKET tcp_create(unsigned int ip, unsigned short port){
+	/*create socket*/
+	_listen_sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
+	if(_listen_sock == INVALID_SOCKET)
+		return -1; //create socket failed
+
+	/*set reuse address*/
+	int on = 1;
+	if(setsockopt(_listen_sock,SOL_SOCKET,SO_REUSEADDR,(const char*)&on,sizeof(on)) != 0)
+		return -1;
+
+	/*bind socket to listen port*/
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(_local_ip);
+	addr.sin_port = htons(_listen_port);
+	int err = ::bind(_listen_sock, (struct sockaddr*)&addr, sizeof(addr));
+	if(err == SOCKET_ERROR)
+		return -1; //bind socket failed.
+}
+
 /**
  * build connection to remote peer with @ip and @port
  * @return

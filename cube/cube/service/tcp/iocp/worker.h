@@ -12,8 +12,8 @@
 #include <process.h>
 
 #include "cube/service/util/cdeque.h"
-#include "cube/service/tcp/client/handler.h"
-#include "cube/service/tcp/client/iocp/olpdata.h"
+#include "cube/service/tcp/handler.h"
+#include "cube/service/tcp/iocp/olpdata.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
@@ -175,7 +175,7 @@ void worker::accept_pending_handlers() {
 			delete hdr;
 		} else {
 			/*add the handler to iocp*/
-			if (::CreateIoCompletionPort((HANDLE)hdr->sock(), __iocp, (ULONG_PTR)hdr, 0) == NULL) {
+			if (::CreateIoCompletionPort((HANDLE)hdr->sock(), _iocp, (ULONG_PTR)hdr, 0) == NULL) {
 				hdr->on_close(ERR_IOCP_ADD_FAILED);
 				delete hdr;
 			} else{
@@ -193,13 +193,10 @@ void worker::poll_processing_handlers() {
 		if(::GetQueuedCompletionStatus(_iocp, &transfered, (PULONG_PTR)&hdr, (LPOVERLAPPED*)&olp, 5)){
 			if(olp->_opt == olpdata::RECV){
 				/*receiving data has completed*/
-				if(hdr->on_recv(olp->_data, transfered) != 0){
+				if(hdr->on_recv(olp->_data.buf, transfered) != 0){
 					hdr->on_close(ERR_TERMINATE_SESSION);
 					this->remove(hdr->sock());
 					delete hdr;
-				}else{
-					/*add new receiving request*/
-					hdr->async_recv();
 				}
 			}else{
 				/*sending data has completed*/
