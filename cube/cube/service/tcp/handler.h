@@ -140,6 +140,30 @@ handler::~handler(){
 
 }
 
+int handler::on_open(void* arg) {
+	return -1;
+}
+
+int handler::on_send(unsigned int sz) {
+	return -1;
+}
+
+int handler::on_recv(const void* data, unsigned int sz) {
+	return -1;
+}
+
+int handler::on_timeout(time_t tm) {
+	return -1;
+}
+
+int handler::on_running(time_t tm) {
+	return -1;
+}
+
+int handler::on_close(int err) {
+	return -1;
+}
+
 void handler::sock(SOCKET s){
 	_session.sock(s);
 }

@@ -1,6 +1,7 @@
 #ifndef CUBE_SERVICE_TCP_IOCP_SERVER_H_
 #define CUBE_SERVICE_TCP_IOCP_SERVER_H_
-#include <Winsock2.h>
+#include <WinSock2.h>
+#include <process.h>
 
 #include "cube/service/stdns.h"
 #include "cube/service/util/socket.h"
@@ -102,12 +103,12 @@ int server<handler>::start(unsigned int ip, unsigned short port, int workers, vo
 	_arg = arg;
 
 	/*start workers*/
-	if(_workers.start(workers) != 0){
+	if(_workers.start(workers, arg) != 0){
 		return -1;;
 	}
 
 	/*create the listen socket*/
-	_sock = ::tcp_create(ip, port);
+	_sock = tcp_create(ip, port);
 	if(_sock < 0){
 		return -1;
 	}
@@ -119,9 +120,10 @@ int server<handler>::start(unsigned int ip, unsigned short port, int workers, vo
 
 	/*start the accept thread*/
 	_stop = false;
-	if (pthread_create(&_thread, 0, accept_thread_func, this) != 0) {
+	_thread = (HANDLE)::_beginthreadex(NULL, 0, accept_thread_func, this, 0, &_thread_id);
+	if(_thread == NULL){
 		_stop = true;
-		return -1;
+		return -1; //start accepter thread failed.
 	}
 
 	return 0;
@@ -135,14 +137,15 @@ int server<handler>::stop() {
 
 	/*stop accept thread first*/
 	_stop = true;
-	pthread_join(_thread, 0);
+	::WaitForSingleObject(_thread, INFINITE);
+	::CloseHandle(_thread);
 
 	/*stop workers*/
 	_workers.stop();
 
 
 	/*close socket*/
-	::close(_sock);
+	::closesocket(_sock);
 
 	return 0;
 }
@@ -150,20 +153,20 @@ int server<handler>::stop() {
 template<class handler>
 int server<handler>::run_accept_loop() {
 	while (!_stop) {
-		struct sockaddr_in remote_addr;
-		socklen_t addr_len = sizeof(remote_addr);
-		memset(&remote_addr, 0, addr_len);
-		int sock = ::accept(_sock, (struct sockaddr*) &remote_addr, &addr_len);
+		struct sockaddr_in remote;
+		int addr_len = sizeof(remote);
+		memset(&remote, 0, addr_len);
+		SOCKET sock = ::WSAAccept(_sock, (struct sockaddr*)&remote, &addr_len, 0, 0);
 		if (sock >= 0) { //new connection
 			if (set_nonblock(sock) != 0) {
-				close(sock);
+				::closesocket(sock);
 				continue;
 			}
 
 			handler *hdr = new handler();
 			hdr->sock(sock);
-			hdr->remote_ip(ntohl(remote_addr.sin_addr.s_addr));
-			hdr->remote_port(ntohs(remote_addr.sin_port));
+			hdr->remote_ip(ntohl(remote.sin_addr.s_addr));
+			hdr->remote_port(ntohs(remote.sin_port));
 
 			if (_workers.dispatch(hdr) != 0){
 				delete hdr;
@@ -175,10 +178,10 @@ int server<handler>::run_accept_loop() {
 }
 
 template<class handler>
-void* server<handler>::accept_thread_func(void *arg) {
+unsigned* server<handler>::accept_thread_func(void *arg) {
 	server<handler> *paccepter = (server<handler> *) arg;
 	paccepter->run_accept_loop();
-	pthread_exit(0);
+	::_endthreadex(0);
 	return 0;
 }
 END_SERVICE_TCP_NS

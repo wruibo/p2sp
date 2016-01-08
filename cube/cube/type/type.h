@@ -1,7 +1,7 @@
 #ifndef _CUBE_TYPE_TYPE_H
 #define _CUBE_TYPE_TYPE_H
-
-#ifdef _WIN32
+#define WIN32
+#if defined(WIN32)
 #include "cube/type/win/type.h"
 #elif defined(linux) || defined(__linux__) || defined(__linux)
 #include "cube/type/linux/type.h"

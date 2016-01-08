@@ -9,7 +9,6 @@
 #define CUBE_SERVICE_TCP_EPOLL_SESSION_H_
 #include <list>
 #include "cube/service/stdns.h"
-#include "cube/service/stdsvc.h"
 BEGIN_SERVICE_TCP_NS
 class datablk {
 public:

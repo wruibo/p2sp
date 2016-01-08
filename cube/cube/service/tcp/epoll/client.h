@@ -11,7 +11,6 @@
 #include <pthread.h>
 
 #include "cube/service/stdns.h"
-#include "cube/service/stdsvc.h"
 #include "cube/service/tcp/epoll/workers.h"
 
 BEGIN_SERVICE_TCP_NS

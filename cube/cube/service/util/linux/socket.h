@@ -7,9 +7,12 @@
 
 #ifndef CUBE_SERVICE_UTIL_LINUX_SOCKET_H_
 #define CUBE_SERVICE_UTIL_LINUX_SOCKET_H_
+#include <fcntl.h>
+#include <errno.h>
 #include <string.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 #include "cube/service/stdns.h"
-#include "cube/service/stdsvc.h"
 
 BEGIN_SERVICE_NS
 static int set_nonblock(int fd) {
@@ -46,7 +49,7 @@ static int tcp_create(unsigned int ip, unsigned short port) {
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(_listen_port);
+	addr.sin_port = ::htons(port);
 	addr.sin_addr.s_addr = htonl(ip);
 
 	/*bind socket to local address*/

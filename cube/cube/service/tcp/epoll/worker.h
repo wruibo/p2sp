@@ -28,7 +28,7 @@ public:
 	 *@return
 	 *	0-success, otherwise for failed
 	 */
-	int start();
+	int start(void* arg = 0);
 
 	/**
 	 * dispatch a new connection peer handler to the worker
@@ -81,6 +81,9 @@ private:
 	static void* work_thread_func(void *arg);
 
 private:
+	//argument will be passed to handler
+	void* _arg;
+
 	//epoll handle
 	int _epoll;
 	//epoll events cache
@@ -97,13 +100,16 @@ private:
 	bool _stop;
 };
 
-worker::worker(): _epoll(-1), _thread(-1), _stop(true){
+worker::worker(): _arg(0), _epoll(-1), _thread(-1), _stop(true){
 }
 
 worker::~worker(void) {
 }
 
-int worker::start() {
+int worker::start(void* arg/* = 0*/) {
+	/*set the argument*/
+	_arg = arg;
+
 	/*create epoll*/
 	_epoll = epoll_create(256);
 	if (_epoll == -1)
@@ -169,7 +175,7 @@ void worker::free() {
 void worker::accept_pending_handlers() {
 	handler *hdr = 0;
 	while(_pending_handlers.pop_front(hdr)){
-		if (hdr->on_open() != 0) {
+		if (hdr->on_open(_arg) != 0) {
 			/*recall on open failed*/
 			hdr->on_close(ERR_TERMINATE_SESSION);
 			delete hdr;
@@ -277,13 +283,12 @@ void worker::run_loop(){
 		/*run every processing handler, inlcude timer operation*/
 		this->run_processing_handlers();
 	}
-
-	pthread_exit(0);
 }
 
 void* worker::work_thread_func(void *arg) {
 	worker* pworker = (worker*) arg;
 	pworker->run_loop();
+	pthread_exit(0);
 	return 0;
 }
 END_SERVICE_TCP_NS

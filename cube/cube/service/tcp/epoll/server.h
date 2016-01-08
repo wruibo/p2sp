@@ -2,6 +2,7 @@
 #define CUBE_SERVICE_TCP_EPOLL_SERVER_H_
 #include <unistd.h>
 #include <pthread.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
 
 #include "cube/service/stdns.h"
@@ -87,12 +88,12 @@ server<handler>::~server() {
 }
 
 template<class handler>
-int server<handler>::start(unsigned short port, int workers, void *arg /* = NULL */) {
+int server<handler>::start(unsigned short port, int workers, void *arg /* = 0 */) {
 	return this->start(INADDR_ANY, port, workers, arg);
 }
 
 template<class handler>
-int server<handler>::start(unsigned int ip, unsigned short port, int workers, void *arg /* = NULL*/) {
+int server<handler>::start(unsigned int ip, unsigned short port, int workers, void *arg /* = 0*/) {
 	if (workers <= 0) {
 		return -1;
 	}
@@ -103,12 +104,12 @@ int server<handler>::start(unsigned int ip, unsigned short port, int workers, vo
 	_arg = arg;
 
 	/*start workers*/
-	if(_workers.start(workers) != 0){
+	if(_workers.start(workers, arg) != 0){
 		return -1;;
 	}
 
 	/*create the listen socket*/
-	_sock = ::tcp_create(ip, port);
+	_sock = tcp_create(ip, port);
 	if(_sock < 0){
 		return -1;
 	}

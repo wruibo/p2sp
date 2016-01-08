@@ -25,7 +25,7 @@ public:
 	 *@return:
 	 *	0-success, otherwise for failed.
 	 */
-	int start(int num);
+	int start(int num, void* arg = 0);
 
 	/**
 	 * dispatch a handler to workers
@@ -53,7 +53,7 @@ workers::~workers(){
 
 }
 
-int workers::start(int num){
+int workers::start(int num, void* arg/* = 0*/){
 	if(num < 1){
 		return -1;
 	}
@@ -61,7 +61,7 @@ int workers::start(int num){
 
 	for(int i=0; i<_wnum; i++){
 		worker* pworker = new worker();
-		if(pworker->start() != 0){
+		if(pworker->start(arg) != 0){
 			return -1;
 		}
 		_workers.push_back(pworker);

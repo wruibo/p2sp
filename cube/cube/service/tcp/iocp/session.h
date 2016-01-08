@@ -69,13 +69,13 @@ private:
 	unsigned short _remote_port;
 };
 
-session::session(): _sock(-1), _remote_ip(0), _remote_port(0){
+session::session(): _sock(INVALID_SOCKET), _remote_ip(0), _remote_port(0){
 
 }
 
 session::~session(){
-	if(_sock != -1){
-		::close(_sock);
+	if(_sock != INVALID_SOCKET){
+		::closesocket(_sock);
 	}
 }
 

@@ -7,11 +7,11 @@
 #include "cube/thread/condition.h"
 
 #if defined(WIN32)
-	#include "cube/thread/win/thread.h"
+#include "cube/thread/win/thread.h"
 #elif defined(linux) || defined(__linux__) || defined(__linux)
-	#include "cube/thread/linux/thread.h"
+#include "cube/thread/linux/thread.h"
 #else
-	#error "platform is not supported."
+#error "platform is not supported."
 #endif
 
 #endif

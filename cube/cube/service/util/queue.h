@@ -1,7 +1,7 @@
 /*
  * queue.h
  *
- *  Created on: 2015年11月25日
+ *  Created on: 2016年1月4日
  *      Author: wrb00_000
  */
 
@@ -10,7 +10,7 @@
 
 #if defined(__linux__)
 #include "cube/service/util/linux/queue.h"
-#elif defined(__WIN32__)
+#elif defined(WIN32)
 #include "cube/service/util/win/queue.h"
 #else
 #error "platform is not supported"

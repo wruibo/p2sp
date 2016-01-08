@@ -5,10 +5,9 @@
 #ifndef CUBE_SERVICE_CLIENT_IOCP_CLIENT_H_
 #define CUBE_SERVICE_CLIENT_IOCP_CLIENT_H_
 #include <process.h>
-#include <Windows.h>
+#include <windows.h>
 
 #include "cube/service/stdns.h"
-#include "cube/service/stdsvc.h"
 #include "cube/service/tcp/iocp/workers.h"
 
 BEGIN_SERVICE_TCP_NS
@@ -125,7 +124,7 @@ int client::stop() {
 	/*stop client thread*/
 	_stop = true;
 	::WaitForSingleObject(_thread, INFINITE);
-	CloseHandle(_thread);
+	::CloseHandle(_thread);
 
 	/*stop connector*/
 	_connector.stop();
@@ -146,12 +145,12 @@ void client::run_loop(){
 		/*wait a tiny time for next loop*/
 		wait_for_next_loop();
 	}
-	::_endthreadex(0);
 }
 
 unsigned* client::client_thread_func(void* arg){
 	client *pclient = (client*)arg;
 	pclient->run_loop();
+	::_endthreadex(0);
 	return 0;
 }
 END_SERVICE_TCP_NS

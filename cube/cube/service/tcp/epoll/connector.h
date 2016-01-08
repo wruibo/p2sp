@@ -14,7 +14,6 @@
 #include "cube/service/stdns.h"
 #include "cube/service/error.h"
 #include "cube/service/util/socket.h"
-#include "cube/service/util/cdeque.h"
 #include "cube/service/tcp/handler.h"
 #include "cube/service/tcp/epoll/events.h"
 #include "cube/service/tcp/epoll/workers.h"
@@ -256,12 +255,11 @@ void connector::run_loop(){
 		/*wait for the next loop*/
 		this->wait_for_next_loop();
 	}
-
-	pthread_exit(0);
 }
 void* connector::connect_thread_func(void* arg){
 	connector* pconnector = (connector*) arg;
 	pconnector->run_loop();
+	pthread_exit(0);
 	return 0;
 }
 END_SERVICE_TCP_NS

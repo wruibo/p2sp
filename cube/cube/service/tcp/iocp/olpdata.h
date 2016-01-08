@@ -11,7 +11,9 @@
 #include "cube/service/stdns.h"
 BEGIN_SERVICE_TCP_NS
 class olpdata{
+public:
 	typedef enum{SEND, RECV} option;
+
 public:
 	olpdata(unsigned int size);
 	olpdata(const void* data, unsigned int size);

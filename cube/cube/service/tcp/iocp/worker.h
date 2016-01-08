@@ -7,12 +7,13 @@
 
 #ifndef CUBE_SERVICE_IOCP_WORKER_H_
 #define CUBE_SERVICE_IOCP_WORKER_H_
-#include <Winsock2.h>
 #include <map>
+#include <WinSock2.h>
 #include <process.h>
 
-#include "cube/service/util/cdeque.h"
+#include "cube/service/error.h"
 #include "cube/service/tcp/handler.h"
+#include "cube/service/util/cdeque.h"
 #include "cube/service/tcp/iocp/olpdata.h"
 
 BEGIN_SERVICE_TCP_NS
@@ -27,7 +28,7 @@ public:
 	 *@return
 	 *	0-success, otherwise for failed
 	 */
-	int start();
+	int start(void* arg = NULL);
 
 	/**
 	 * dispatch a new connection peer handler to the worker
@@ -80,6 +81,9 @@ private:
 	static unsigned* work_thread_func(void *arg);
 
 private:
+	//argument will passed to handler
+	void* _arg;
+
 	//IOCP handler
 	HANDLE _iocp;
 
@@ -95,13 +99,16 @@ private:
 	bool _stop;
 };
 
-worker::worker(): _iocp(INVALID_HANDLE_VALUE), _thread(INVALID_HANDLE_VALUE), _thread_id(0), _stop(true){
+worker::worker(): _arg(NULL), _iocp(INVALID_HANDLE_VALUE), _thread(INVALID_HANDLE_VALUE), _thread_id(0), _stop(true){
 }
 
 worker::~worker(void) {
 }
 
-int worker::start() {
+int worker::start(void* arg /*= NULL*/) {
+	/*set the argument that will be passed to handler*/
+	_arg = arg;
+
 	/*create io complete port*/
 	_iocp = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 	if(_iocp == NULL){
@@ -110,7 +117,7 @@ int worker::start() {
 
 	/*start worker thread*/
 	_stop = false;
-	_thread = (HANDLE)::_beginthreadex(NULL, 0, work_thread_func, this, &_thread_id);
+	_thread = (HANDLE)::_beginthreadex(NULL, 0, work_thread_func, this, 0, &_thread_id);
 	if(_thread == NULL){
 		_stop = true;
 		return -1;
@@ -131,6 +138,7 @@ int worker::stop() {
 	/*stop worker thread*/
 	_stop = true;
 	::WaitForSingleObject(_thread, INFINITE);
+	::CloseHandle(_thread);
 
 	/*free all handlers*/
 	this->free();
@@ -169,7 +177,7 @@ void worker::free() {
 void worker::accept_pending_handlers() {
 	handler *hdr = 0;
 	while(_pending_handlers.pop_front(hdr)){
-		if (hdr->on_open() != 0) {
+		if (hdr->on_open(_arg) != 0) {
 			/*recall on open failed*/
 			hdr->on_close(ERR_TERMINATE_SESSION);
 			delete hdr;
