@@ -7,7 +7,7 @@
 
 #ifndef CUBE_SERVICE_TCP_IOCP_OLPDATA_H_
 #define CUBE_SERVICE_TCP_IOCP_OLPDATA_H_
-#include <Winsock2.h>
+#include <WinSock2.h>
 #include "cube/service/stdns.h"
 BEGIN_SERVICE_TCP_NS
 class olpdata{

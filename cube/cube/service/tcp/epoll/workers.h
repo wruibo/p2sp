@@ -30,7 +30,7 @@ public:
 	/**
 	 * dispatch a handler to workers
 	 */
-	void dispatch(handler *hdr);
+	int dispatch(handler *hdr);
 
 	/**
 	 * stop workers
@@ -69,8 +69,9 @@ int workers::start(int num, void* arg/* = 0*/){
 	return 0;
 }
 
-void workers::dispatch(handler *hdr){
+int workers::dispatch(handler *hdr){
 	_workers[_pos++%_wnum]->dispatch(hdr);
+	return 0;
 }
 
 int workers::stop(){

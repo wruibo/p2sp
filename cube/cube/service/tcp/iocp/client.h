@@ -9,6 +9,7 @@
 
 #include "cube/service/stdns.h"
 #include "cube/service/tcp/iocp/workers.h"
+#include "cube/service/tcp/iocp/connector.h"
 
 BEGIN_SERVICE_TCP_NS
 using namespace std;
@@ -62,7 +63,7 @@ private:
 	/**
 	 * thread function for client thread
 	 */
-	static unsigned * client_thread_func(void *arg);
+	static unsigned __stdcall client_thread_func(void *arg);
 
 private:
 	//connector of the client
@@ -147,7 +148,7 @@ void client::run_loop(){
 	}
 }
 
-unsigned* client::client_thread_func(void* arg){
+unsigned client::client_thread_func(void* arg){
 	client *pclient = (client*)arg;
 	pclient->run_loop();
 	::_endthreadex(0);

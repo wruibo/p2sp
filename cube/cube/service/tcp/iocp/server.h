@@ -54,7 +54,7 @@ private:
 	/**
 	 * thread function for accept socket from remote peer
 	 */
-	static unsigned * accept_thread_func(void *arg);
+	static unsigned __stdcall accept_thread_func(void *arg);
 
 private:
 	//listening socket
@@ -175,10 +175,11 @@ int server<handler>::run_accept_loop() {
 			; //print error, should nerve happened
 		}
 	}
+	return 0;
 }
 
 template<class handler>
-unsigned* server<handler>::accept_thread_func(void *arg) {
+unsigned server<handler>::accept_thread_func(void *arg) {
 	server<handler> *paccepter = (server<handler> *) arg;
 	paccepter->run_accept_loop();
 	::_endthreadex(0);

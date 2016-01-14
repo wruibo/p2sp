@@ -33,4 +33,5 @@ int echo_handler::on_close(int err) {
 
 int test_tcp_server::run_test() {
 	_server.start(8000, 1);
+	return 0;
 }

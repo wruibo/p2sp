@@ -26,9 +26,11 @@
 							<tool id="org.eclipse.cdt.msvc.cl.dll.debug.1920262060" name="C++ Compiler (cl)" superClass="org.eclipse.cdt.msvc.cl.dll.debug">
 								<option id="org.eclipse.cdt.msvc.cl.option.includes.365617018" name="Include Path (/I)" superClass="org.eclipse.cdt.msvc.cl.option.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cube}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.msvc.cl.option.macros.1224349872" name="Defines (/D)" superClass="org.eclipse.cdt.msvc.cl.option.macros" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="WIN32"/>
+									<listOptionValue builtIn="false" value="WIN32_LEAN_AND_MEAN"/>
 								</option>
 								<option id="org.eclipse.cdt.msvc.cl.option.optimization.1309032056" name="Optimization" superClass="org.eclipse.cdt.msvc.cl.option.optimization" value="org.eclipse.cdt.msvc.cl.option.optimization.default" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.msvc.cl.option.debugFormat.1543921600" name="Debug Information Format" superClass="org.eclipse.cdt.msvc.cl.option.debugFormat" value="org.eclipse.cdt.msvc.cl.option.debugFormat.complete" valueType="enumerated"/>
@@ -97,10 +99,15 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="test.cdt.managedbuild.target.gnu.cygwin.exe.485662239" name="Executable" projectType="cdt.managedbuild.target.gnu.cygwin.exe"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.release.341213439;cdt.managedbuild.config.gnu.cygwin.exe.release.341213439.;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.exe.release.1994755657;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.689797478">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254;cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254.;org.eclipse.cdt.msvc.cl.c.dll.debug.475645568;org.eclipse.cdt.msvc.cl.inputType.c.572528930">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.msw.build.clScannerInfo"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254;cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254.;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.exe.debug.1526405028;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.1347839692">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -111,7 +118,8 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254;cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.exe.debug.903941706;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1750315656">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254;cdt.managedbuild.config.gnu.cygwin.exe.debug.1070005254.;org.eclipse.cdt.msvc.cl.dll.debug.1920262060;org.eclipse.cdt.msvc.cl.inputType.1874846898">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.msw.build.clScannerInfo"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
 </cproject>

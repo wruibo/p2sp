@@ -78,7 +78,7 @@ private:
 	/**
 	 * thread function for worker
 	 */
-	static unsigned* work_thread_func(void *arg);
+	static unsigned __stdcall work_thread_func(void *arg);
 
 private:
 	//argument will passed to handler
@@ -161,7 +161,7 @@ void worker::free() {
 	map<int, handler*>::iterator iter = _processing_handlers.begin(), iterend = _processing_handlers.end();
 	while(iter != iterend){
 		iter->second->on_close(ERR_TERMINATE_SESSION);
-		delete *iter;
+		delete iter->second;
 		iter++;
 	}
 	_processing_handlers.clear();
@@ -280,7 +280,7 @@ void worker::run_loop(){
 	_endthreadex(0);
 }
 
-unsigned* worker::work_thread_func(void *arg) {
+unsigned worker::work_thread_func(void *arg) {
 	worker* pworker = (worker*) arg;
 	pworker->run_loop();
 	return 0;

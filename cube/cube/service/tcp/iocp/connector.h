@@ -8,7 +8,6 @@
 #ifndef CUBE_SERVICE_TCP_IOCP_CONNECTOR_H_
 #define CUBE_SERVICE_TCP_IOCP_CONNECTOR_H_
 #include <WinSock2.h>
-#include <Windows.h>
 
 #include <list>
 #include <process.h>
@@ -93,7 +92,7 @@ private:
 	/**
 	 * thread function for checking the connection status
 	 */
-	static unsigned* connect_thread_func(void* arg);
+	static unsigned __stdcall connect_thread_func(void* arg);
 
 private:
 	//workers reference
@@ -116,7 +115,7 @@ connector::connector() : _workers(0), _thread(NULL), _thread_id(0), _stop(true) 
 }
 
 connector::~connector(){
-	DeleteCriticalSection(&_pending_handlers_crc)
+	DeleteCriticalSection(&_pending_handlers_crc);
 }
 
 int connector::start(workers *workers){
@@ -127,7 +126,7 @@ int connector::start(workers *workers){
 
 	/*start the connector thread*/
 	_stop = false;
-	_thread = (HANDLE)::_beginthreadex(NULL, 0, connect_thread_func, this, &_thread_id);
+	_thread = (HANDLE)::_beginthreadex(NULL, 0, connect_thread_func, this, 0, &_thread_id);
 	if(_thread == NULL)
 	{
 		_stop = true;
@@ -274,7 +273,7 @@ void connector::run_loop(){
 
 	::_endthreadex(0);
 }
-unsigned* connector::connect_thread_func(void* arg){
+unsigned connector::connect_thread_func(void* arg){
 	connector* pconnector = (connector*) arg;
 	pconnector->run_loop();
 	return 0;
