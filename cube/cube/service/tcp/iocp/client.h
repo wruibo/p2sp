@@ -4,8 +4,6 @@
 
 #ifndef CUBE_SERVICE_CLIENT_IOCP_CLIENT_H_
 #define CUBE_SERVICE_CLIENT_IOCP_CLIENT_H_
-#include <windows.h>
-
 #include "cube/service/stdns.h"
 #include "cube/service/tcp/iocp/workers.h"
 #include "cube/service/tcp/iocp/connector.h"

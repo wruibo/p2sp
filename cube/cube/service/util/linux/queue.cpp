@@ -1,4 +1,4 @@
-#include <linux/time.h>
+#include <time.h>
 #include "cube/service/util/linux/queue.h"
 
 BEGIN_SERVICE_NS

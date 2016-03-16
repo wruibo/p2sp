@@ -1,5 +1,4 @@
 #include <process.h>
-
 #include "cube/service/tcp/iocp/client.h"
 BEGIN_SERVICE_TCP_NS
 client::client(): _thread(NULL), _thread_id(0), _stop(true) {

@@ -8,6 +8,7 @@
 #ifndef CUBE_SERVICE_TCP_IOCP_SESSION_H_
 #define CUBE_SERVICE_TCP_IOCP_SESSION_H_
 #include <WinSock2.h>
+#include <windows.h>
 
 #include "cube/service/stdns.h"
 #include "cube/service/tcp/iocp/olpdata.h"

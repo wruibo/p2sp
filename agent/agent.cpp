@@ -1,8 +1,15 @@
 #include <iostream>
-#include <Windows.h>
+#include <process.h>
 using namespace std;
 
+static unsigned client_thread_func(void* arg){
+	cout<<"in client thread..."<<endl;
+	return 0;
+}
+
 int main(int argc, char *argv[]){
+	::_beginthreadex(NULL, 0, client_thread_func, 0, 0, 0);
+
 	cout<<"in agent"<<endl;
 	void** pvoid = new void*[10];
 	int a = 1;

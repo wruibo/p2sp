@@ -9,7 +9,7 @@
 #define CUBE_SERVICE_CLIENT_CLIENT_H_
 #if defined(__linux__)
 #include "cube/service/tcp/epoll/client.h"
-#elif defined(WIN32)
+#elif defined(WIN)
 #include "cube/service/tcp/iocp/client.h"
 #else
 #error "platform is not supported"

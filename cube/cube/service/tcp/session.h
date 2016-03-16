@@ -10,7 +10,7 @@
 
 #if defined(__linux__)
 #include "cube/service/tcp/epoll/session.h"
-#elif defined(WIN32)
+#elif defined(WIN)
 #include "cube/service/tcp/iocp/session.h"
 #else
 #error "platform is not supported"
