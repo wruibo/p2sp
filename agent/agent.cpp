@@ -2,10 +2,11 @@
 #include <process.h>
 using namespace std;
 
-static unsigned client_thread_func(void* arg){
+static unsigned __stdcall client_thread_func(void* arg){
 	cout<<"in client thread..."<<endl;
 	return 0;
 }
+
 
 int main(int argc, char *argv[]){
 	::_beginthreadex(NULL, 0, client_thread_func, 0, 0, 0);
@@ -17,4 +18,3 @@ int main(int argc, char *argv[]){
 	cout<<"value :"<<*(int*)pvoid[0]<<endl;
 	return 0;
 }
-

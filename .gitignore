@@ -1,0 +1,12 @@
+Debug/
+ipch/
+*.sdf
+*.suo
+*.o
+*.pdb
+*.exe
+.settings/
+*.pdsync
+*.pdsyncu
+*.opensdf
+*.bak

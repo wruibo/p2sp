@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "agent", "agent\agent.vcxproj", "{FD383CD7-F2F9-4C77-9C82-1416F72D30B4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cube", "cube\cube.vcxproj", "{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}"
+EndProject
+Global
+	GlobalSection(PowerDesigner) = preSolution
+		HasSWS = 1
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD383CD7-F2F9-4C77-9C82-1416F72D30B4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FD383CD7-F2F9-4C77-9C82-1416F72D30B4}.Debug|Win32.Build.0 = Debug|Win32
+		{FD383CD7-F2F9-4C77-9C82-1416F72D30B4}.Release|Win32.ActiveCfg = Release|Win32
+		{FD383CD7-F2F9-4C77-9C82-1416F72D30B4}.Release|Win32.Build.0 = Release|Win32
+		{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}.Debug|Win32.Build.0 = Debug|Win32
+		{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}.Release|Win32.ActiveCfg = Release|Win32
+		{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

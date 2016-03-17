@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C7F060EE-9D6C-46E7-85B6-DE8297532DEB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>cube</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cube\container\container.h" />
+    <ClInclude Include="cube\container\queue\blocking_deque.h" />
+    <ClInclude Include="cube\logger\dbg.h" />
+    <ClInclude Include="cube\service\error.h" />
+    <ClInclude Include="cube\service\service.h" />
+    <ClInclude Include="cube\service\stdns.h" />
+    <ClInclude Include="cube\service\tcp\client.h" />
+    <ClInclude Include="cube\service\tcp\epoll\client.h" />
+    <ClInclude Include="cube\service\tcp\epoll\connector.h" />
+    <ClInclude Include="cube\service\tcp\epoll\events.h" />
+    <ClInclude Include="cube\service\tcp\epoll\server.h" />
+    <ClInclude Include="cube\service\tcp\epoll\session.h" />
+    <ClInclude Include="cube\service\tcp\epoll\worker.h" />
+    <ClInclude Include="cube\service\tcp\epoll\workers.h" />
+    <ClInclude Include="cube\service\tcp\handler.h" />
+    <ClInclude Include="cube\service\tcp\iocp\client.h" />
+    <ClInclude Include="cube\service\tcp\iocp\connector.h" />
+    <ClInclude Include="cube\service\tcp\iocp\olpdata.h" />
+    <ClInclude Include="cube\service\tcp\iocp\server.h" />
+    <ClInclude Include="cube\service\tcp\iocp\session.h" />
+    <ClInclude Include="cube\service\tcp\iocp\worker.h" />
+    <ClInclude Include="cube\service\tcp\iocp\workers.h" />
+    <ClInclude Include="cube\service\tcp\server.h" />
+    <ClInclude Include="cube\service\tcp\session.h" />
+    <ClInclude Include="cube\service\tcp\timer.h" />
+    <ClInclude Include="cube\service\udp\client.h" />
+    <ClInclude Include="cube\service\udp\client\epoll\client.h" />
+    <ClInclude Include="cube\service\udp\client\epoll\handler.h" />
+    <ClInclude Include="cube\service\udp\client\epoll\worker.h" />
+    <ClInclude Include="cube\service\udp\client\handler.h" />
+    <ClInclude Include="cube\service\udp\client\linux\client.h" />
+    <ClInclude Include="cube\service\udp\client\linux\worker.h" />
+    <ClInclude Include="cube\service\udp\server.h" />
+    <ClInclude Include="cube\service\udp\server\handler.h" />
+    <ClInclude Include="cube\service\udp\server\linux\server.h" />
+    <ClInclude Include="cube\service\udp\server\linux\worker.h" />
+    <ClInclude Include="cube\service\udp\server\win\client.h" />
+    <ClInclude Include="cube\service\udp\server\win\server.h" />
+    <ClInclude Include="cube\service\udp\server\win\worker.h" />
+    <ClInclude Include="cube\service\util\cdeque.h" />
+    <ClInclude Include="cube\service\util\linux\cdeque.h" />
+    <ClInclude Include="cube\service\util\linux\queue.h" />
+    <ClInclude Include="cube\service\util\linux\socket.h" />
+    <ClInclude Include="cube\service\util\queue.h" />
+    <ClInclude Include="cube\service\util\socket.h" />
+    <ClInclude Include="cube\service\util\win\cdeque.h" />
+    <ClInclude Include="cube\service\util\win\queue.h" />
+    <ClInclude Include="cube\service\util\win\socket.h" />
+    <ClInclude Include="cube\string\case.h" />
+    <ClInclude Include="cube\string\convert.h" />
+    <ClInclude Include="cube\string\hex.h" />
+    <ClInclude Include="cube\string\linux\convert.h" />
+    <ClInclude Include="cube\string\stdns.h" />
+    <ClInclude Include="cube\string\trim.h" />
+    <ClInclude Include="cube\string\win\convert.h" />
+    <ClInclude Include="cube\thread\condition.h" />
+    <ClInclude Include="cube\thread\linux\condition.h" />
+    <ClInclude Include="cube\thread\linux\critical_section.h" />
+    <ClInclude Include="cube\thread\linux\mutex.h" />
+    <ClInclude Include="cube\thread\linux\rwlock.h" />
+    <ClInclude Include="cube\thread\linux\semaphore.h" />
+    <ClInclude Include="cube\thread\linux\thread.h" />
+    <ClInclude Include="cube\thread\linux\util.h" />
+    <ClInclude Include="cube\thread\lock.h" />
+    <ClInclude Include="cube\thread\mutex.h" />
+    <ClInclude Include="cube\thread\runnable.h" />
+    <ClInclude Include="cube\thread\stdns.h" />
+    <ClInclude Include="cube\thread\thread.h" />
+    <ClInclude Include="cube\thread\thread_exception.h" />
+    <ClInclude Include="cube\thread\util.h" />
+    <ClInclude Include="cube\thread\win\condition.h" />
+    <ClInclude Include="cube\thread\win\critical_section.h" />
+    <ClInclude Include="cube\thread\win\mutex.h" />
+    <ClInclude Include="cube\thread\win\rwlock.h" />
+    <ClInclude Include="cube\thread\win\semaphore.h" />
+    <ClInclude Include="cube\thread\win\thread.h" />
+    <ClInclude Include="cube\thread\win\util.h" />
+    <ClInclude Include="cube\timer\crontab.h" />
+    <ClInclude Include="cube\timer\stdns.h" />
+    <ClInclude Include="cube\timer\task.h" />
+    <ClInclude Include="cube\timer\timer.h" />
+    <ClInclude Include="cube\time\linux\time.h" />
+    <ClInclude Include="cube\time\stdns.h" />
+    <ClInclude Include="cube\time\time.h" />
+    <ClInclude Include="cube\time\win\time.h" />
+    <ClInclude Include="cube\type\linux\type.h" />
+    <ClInclude Include="cube\type\type.h" />
+    <ClInclude Include="cube\type\win\type.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cube\service\tcp\iocp\client.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\connector.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\olpdata.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\server.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\session.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\worker.cpp" />
+    <ClCompile Include="cube\service\tcp\iocp\workers.cpp" />
+    <ClCompile Include="cube\service\util\linux\cdeque.cpp" />
+    <ClCompile Include="cube\service\util\linux\queue.cpp" />
+    <ClCompile Include="cube\service\util\linux\socket.cpp" />
+    <ClCompile Include="cube\service\util\win\cdeque.cpp" />
+    <ClCompile Include="cube\service\util\win\queue.cpp" />
+    <ClCompile Include="cube\service\util\win\socket.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
