@@ -13,6 +13,39 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\cube">
+      <UniqueIdentifier>{9bc23eaa-c7ae-4315-afd7-6972960fac0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\container">
+      <UniqueIdentifier>{9403555d-7669-48fb-a09c-180252afdb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\string">
+      <UniqueIdentifier>{6b8da38e-d261-4b59-ac46-587657c34d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service">
+      <UniqueIdentifier>{edc4aa6f-dd3c-4ac6-b91a-617d17b1fd9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\util">
+      <UniqueIdentifier>{4f4f5f3b-16f7-4fce-8c34-05aca819aac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\util\win">
+      <UniqueIdentifier>{ccc01f49-af62-4976-a28d-3ffc99fc55df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\util\linux">
+      <UniqueIdentifier>{42b4ff8c-2edd-49f8-babc-85a9344946fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\tcp">
+      <UniqueIdentifier>{4d7a6f82-1a5c-4f4f-be80-031e5091ef24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\tcp\epoll">
+      <UniqueIdentifier>{92708757-4e9d-4fe2-9a5d-2207f85edbf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\tcp\iocp">
+      <UniqueIdentifier>{61ac1e15-5263-43b5-9c0d-801496dac66d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp">
+      <UniqueIdentifier>{6d69dd03-5fad-4d71-98f8-081b00fb7c68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -21,13 +54,7 @@
     <ClInclude Include="cube\container\container.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="cube\container\queue\blocking_deque.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cube\logger\dbg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\tcp\epoll\connector.h">
@@ -67,9 +94,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\tcp\iocp\workers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\tcp\handler.h">
@@ -120,13 +144,7 @@
     <ClInclude Include="cube\service\udp\server\handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cube\service\udp\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cube\service\udp\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\linux\cdeque.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\util\linux\queue.h">
@@ -135,16 +153,10 @@
     <ClInclude Include="cube\service\util\linux\socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cube\service\util\win\cdeque.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cube\service\util\win\queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\util\win\socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\cdeque.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\service\util\queue.h">
@@ -166,9 +178,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\string\win\convert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\case.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube\string\convert.h">
@@ -281,6 +290,30 @@
     </ClInclude>
     <ClInclude Include="cube\type\type.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\container\queue\blocking_deque.h">
+      <Filter>Header Files\cube\container</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\case.h">
+      <Filter>Header Files\cube\string</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\win\cdeque.h">
+      <Filter>Header Files\cube\service\util\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\linux\cdeque.h">
+      <Filter>Header Files\cube\service\util\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\cdeque.h">
+      <Filter>Header Files\cube\service\util</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\client.h">
+      <Filter>Header Files\cube\service\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\client.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client.h">
+      <Filter>Header Files\cube\service\udp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -73,7 +73,7 @@
 					</folderInfo>
 					<fileInfo id="cdt.managedbuild.config.gnu.cygwin.exe.debug.1322576695.1288956580" name="client.h" rcbsApplicability="disable" resourcePath="cube/service/tcp/iocp/client.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="cube/service/util/linux" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cube/service/tcp/epoll|cube/service/util/linux" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -121,7 +121,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="cube/service/util/linux|thread/win" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cube/service/tcp/epoll|cube/service/util/linux|thread/win" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
