@@ -46,254 +46,101 @@
     <Filter Include="Header Files\cube\service\udp">
       <UniqueIdentifier>{6d69dd03-5fad-4d71-98f8-081b00fb7c68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\cube\thread">
+      <UniqueIdentifier>{ede65620-9309-4409-9f52-5cb7025bdc01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\thread\linux">
+      <UniqueIdentifier>{677937ea-b9cb-44d6-9fac-4e81b3f6055b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\thread\win">
+      <UniqueIdentifier>{a68f0ea8-c737-46c8-8cf1-9ec8f2458964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\string\win">
+      <UniqueIdentifier>{9ecdb8fc-4b58-4d38-a421-203034bef133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\string\linux">
+      <UniqueIdentifier>{bbbd469e-9633-4763-b3a7-19d36c44e378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\logger">
+      <UniqueIdentifier>{52161c09-8ec2-4acb-b7db-6c4d0305074c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\timer">
+      <UniqueIdentifier>{5b4c556a-5ea2-4831-aeda-fe765908369f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\client">
+      <UniqueIdentifier>{c4131e27-cfa0-4803-b6d4-ff7bab3e304c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\server">
+      <UniqueIdentifier>{12f3db36-edc8-498f-b697-8ecb40ad49ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\client\linux">
+      <UniqueIdentifier>{34ea1c71-1788-46c4-8703-69b95e46d5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\client\win">
+      <UniqueIdentifier>{7fc8642c-7733-468b-90d7-54d106ebbd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\server\linux">
+      <UniqueIdentifier>{d17137d3-472b-41e4-8b50-c4adb92d4436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\server\win">
+      <UniqueIdentifier>{070b1556-2427-4fbd-bbcc-b8d289b23694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\service\udp\client\epoll">
+      <UniqueIdentifier>{c8e9dd86-51d1-494b-b339-d05af10443a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\time">
+      <UniqueIdentifier>{e182f7bd-6bda-4d51-b95b-44e4e9007579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\time\linux">
+      <UniqueIdentifier>{89857fc8-945f-48a9-8140-114a62a164cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\time\win">
+      <UniqueIdentifier>{0d392953-3ad5-4377-9ce8-bdcbce6551d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\type">
+      <UniqueIdentifier>{f57ed828-c888-4a2f-8887-cb88ed7d384d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\type\linux">
+      <UniqueIdentifier>{a681a8b7-530a-4f73-81e2-9fb7cf2e779c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\type\win">
+      <UniqueIdentifier>{7930817d-c338-4ed1-bb05-3bb67d037c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cube\container\queue">
+      <UniqueIdentifier>{aa0cc401-e56e-4b68-8f26-b4a08b8ef6a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube">
+      <UniqueIdentifier>{1758f00a-9ad7-4773-9a84-3f3193097f0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\container">
+      <UniqueIdentifier>{028e82da-30bb-4fad-89a6-caa451752fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service">
+      <UniqueIdentifier>{f1b8d187-d620-485c-bc34-a28ca6e59155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\tcp">
+      <UniqueIdentifier>{0f56287a-b621-4cd5-b0d0-2b9b9683b555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\tcp\iocp">
+      <UniqueIdentifier>{20432790-aad2-45e2-bb6d-0e4ba9c4f6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\util">
+      <UniqueIdentifier>{76fa8f5b-b648-4aec-ad8e-ec34c80865ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\udp">
+      <UniqueIdentifier>{f8a84759-5750-4d07-b4bb-443a5bcccf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\util\win">
+      <UniqueIdentifier>{a178636c-13e8-436f-8d1a-bce5d3c71586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cube\service\util\linux">
+      <UniqueIdentifier>{e82f2382-e339-46e1-9bf0-32987df55b4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cube\container\container.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\logger\dbg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\connector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\events.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\session.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\epoll\workers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\connector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\olpdata.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\session.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\iocp\workers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\session.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\tcp\timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\epoll\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\epoll\handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\epoll\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\linux\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\linux\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\client\handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\linux\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\linux\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\win\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\win\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\win\worker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server\handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\udp\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\linux\queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\linux\socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\win\queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\win\socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\util\socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\service.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\service\stdns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\linux\convert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\win\convert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\convert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\hex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\stdns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\string\trim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\condition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\critical_section.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\rwlock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\semaphore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\linux\util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\condition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\critical_section.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\rwlock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\semaphore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\win\util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\condition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\lock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\runnable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\stdns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\thread_exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\thread\util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\time\linux\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\time\win\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\time\stdns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\time\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\timer\crontab.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\timer\stdns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\timer\task.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\timer\timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\type\linux\type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\type\win\type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\type\type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube\container\queue\blocking_deque.h">
-      <Filter>Header Files\cube\container</Filter>
-    </ClInclude>
     <ClInclude Include="cube\string\case.h">
       <Filter>Header Files\cube\string</Filter>
     </ClInclude>
@@ -315,46 +162,286 @@
     <ClInclude Include="cube\service\udp\client.h">
       <Filter>Header Files\cube\service\udp</Filter>
     </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\client.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\condition.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\condition.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\condition.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\connector.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\connector.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\win\convert.h">
+      <Filter>Header Files\cube\string\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\convert.h">
+      <Filter>Header Files\cube\string</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\linux\convert.h">
+      <Filter>Header Files\cube\string\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\critical_section.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\critical_section.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\timer\crontab.h">
+      <Filter>Header Files\cube\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\logger\dbg.h">
+      <Filter>Header Files\cube\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\error.h">
+      <Filter>Header Files\cube\service</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\events.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\handler.h">
+      <Filter>Header Files\cube\service\udp\client</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\handler.h">
+      <Filter>Header Files\cube\service\udp\server</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\handler.h">
+      <Filter>Header Files\cube\service\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\epoll\handler.h">
+      <Filter>Header Files\cube\service\udp\client\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\epoll\client.h">
+      <Filter>Header Files\cube\service\udp\client\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\hex.h">
+      <Filter>Header Files\cube\string</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\lock.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\mutex.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\mutex.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\mutex.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\olpdata.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\queue.h">
+      <Filter>Header Files\cube\service\util</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\linux\queue.h">
+      <Filter>Header Files\cube\service\util\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\win\queue.h">
+      <Filter>Header Files\cube\service\util\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\runnable.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\rwlock.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\rwlock.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\semaphore.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\semaphore.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\server.h">
+      <Filter>Header Files\cube\service\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\linux\server.h">
+      <Filter>Header Files\cube\service\udp\server\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\server.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\win\server.h">
+      <Filter>Header Files\cube\service\udp\server\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server.h">
+      <Filter>Header Files\cube\service\udp\server</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\linux\client.h">
+      <Filter>Header Files\cube\service\udp\client\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\win\client.h">
+      <Filter>Header Files\cube\service\udp\client\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\server.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\service.h">
+      <Filter>Header Files\cube\service</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\session.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\session.h">
+      <Filter>Header Files\cube\service\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\session.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\linux\socket.h">
+      <Filter>Header Files\cube\service\util\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\socket.h">
+      <Filter>Header Files\cube\service\util</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\util\win\socket.h">
+      <Filter>Header Files\cube\service\util\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\stdns.h">
+      <Filter>Header Files\cube\service</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\stdns.h">
+      <Filter>Header Files\cube\string</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\time\stdns.h">
+      <Filter>Header Files\cube\time</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\timer\stdns.h">
+      <Filter>Header Files\cube\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\stdns.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\timer\task.h">
+      <Filter>Header Files\cube\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\thread.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\thread.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\thread.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\thread_exception.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\time\time.h">
+      <Filter>Header Files\cube\time</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\time\linux\time.h">
+      <Filter>Header Files\cube\time\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\time\win\time.h">
+      <Filter>Header Files\cube\time\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\timer.h">
+      <Filter>Header Files\cube\service\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\timer\timer.h">
+      <Filter>Header Files\cube\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\string\trim.h">
+      <Filter>Header Files\cube\string</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\type\type.h">
+      <Filter>Header Files\cube\type</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\type\linux\type.h">
+      <Filter>Header Files\cube\type\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\type\win\type.h">
+      <Filter>Header Files\cube\type\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\win\util.h">
+      <Filter>Header Files\cube\thread\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\util.h">
+      <Filter>Header Files\cube\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\thread\linux\util.h">
+      <Filter>Header Files\cube\thread\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\worker.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\epoll\worker.h">
+      <Filter>Header Files\cube\service\udp\client\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\client\linux\worker.h">
+      <Filter>Header Files\cube\service\udp\client\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\linux\worker.h">
+      <Filter>Header Files\cube\service\udp\server\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\udp\server\win\worker.h">
+      <Filter>Header Files\cube\service\udp\server\win</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\worker.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\epoll\workers.h">
+      <Filter>Header Files\cube\service\tcp\epoll</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\service\tcp\iocp\workers.h">
+      <Filter>Header Files\cube\service\tcp\iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\container\queue\blocking_deque.h">
+      <Filter>Header Files\cube\container\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="cube\container\container.h">
+      <Filter>Header Files\cube\container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cube\service\util\win\cdeque.cpp">
+      <Filter>Source Files\cube\service\util\win</Filter>
+    </ClCompile>
     <ClCompile Include="cube\service\tcp\iocp\client.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
     </ClCompile>
     <ClCompile Include="cube\service\tcp\iocp\connector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
     </ClCompile>
     <ClCompile Include="cube\service\tcp\iocp\olpdata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\tcp\iocp\server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\tcp\iocp\session.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\tcp\iocp\worker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\tcp\iocp\workers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\util\linux\cdeque.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\util\linux\queue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\util\linux\socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube\service\util\win\cdeque.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
     </ClCompile>
     <ClCompile Include="cube\service\util\win\queue.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cube\service\util\win</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\iocp\server.cpp">
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\iocp\session.cpp">
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
     </ClCompile>
     <ClCompile Include="cube\service\util\win\socket.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cube\service\util\win</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\iocp\worker.cpp">
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\iocp\workers.cpp">
+      <Filter>Source Files\cube\service\tcp\iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\timer.cpp">
+      <Filter>Source Files\cube\service\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="cube\service\tcp\handler.cpp">
+      <Filter>Source Files\cube\service\tcp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

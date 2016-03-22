@@ -45,6 +45,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +163,7 @@
     <ClInclude Include="cube\type\win\type.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cube\service\tcp\handler.cpp" />
     <ClCompile Include="cube\service\tcp\iocp\client.cpp" />
     <ClCompile Include="cube\service\tcp\iocp\connector.cpp" />
     <ClCompile Include="cube\service\tcp\iocp\olpdata.cpp" />
@@ -169,9 +171,7 @@
     <ClCompile Include="cube\service\tcp\iocp\session.cpp" />
     <ClCompile Include="cube\service\tcp\iocp\worker.cpp" />
     <ClCompile Include="cube\service\tcp\iocp\workers.cpp" />
-    <ClCompile Include="cube\service\util\linux\cdeque.cpp" />
-    <ClCompile Include="cube\service\util\linux\queue.cpp" />
-    <ClCompile Include="cube\service\util\linux\socket.cpp" />
+    <ClCompile Include="cube\service\tcp\timer.cpp" />
     <ClCompile Include="cube\service\util\win\cdeque.cpp" />
     <ClCompile Include="cube\service\util\win\queue.cpp" />
     <ClCompile Include="cube\service\util\win\socket.cpp" />

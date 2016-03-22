@@ -1,10 +1,3 @@
-/*
- * socket.h
- *
- *  Created on: 2016年1月4日
- *      Author: wrb00_000
- */
-
 #ifndef CUBE_SERVICE_UTIL_SOCKET_H_
 #define CUBE_SERVICE_UTIL_SOCKET_H_
 

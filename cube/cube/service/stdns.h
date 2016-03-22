@@ -1,10 +1,3 @@
-/*
- * stdns.h
- *
- *  Created on: 2015年12月7日
- *      Author: wrb00_000
- */
-
 #ifndef CUBE_SERVICE_TCP_CLIENT_STDNS_H_
 #define CUBE_SERVICE_TCP_CLIENT_STDNS_H_
 

@@ -1,10 +1,3 @@
-/*
- * socket.h
- *
- *  Created on: 2015年11月25日
- *      Author: wrb00_000
- */
-
 #ifndef CUBE_SERVICE_UTIL_WIN_SOCKET_H_
 #define CUBE_SERVICE_UTIL_WIN_SOCKET_H_
 #include "cube/service/stdns.h"

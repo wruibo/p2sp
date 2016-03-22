@@ -1,10 +1,3 @@
-/*
- * error.h
- *
- *  Created on: 2015年12月24日
- *      Author: wrb00_000
- */
-
 #ifndef CUBE_SERVICE_ERROR_H_
 #define CUBE_SERVICE_ERROR_H_
 #include "cube/service/stdns.h"

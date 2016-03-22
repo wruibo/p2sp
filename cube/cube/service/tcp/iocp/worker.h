@@ -1,10 +1,3 @@
-/*
- * work.h
- *
- *  Created on: 2015年11月17日
- *      Author: wrb00_000
- */
-
 #ifndef CUBE_SERVICE_IOCP_WORKER_H_
 #define CUBE_SERVICE_IOCP_WORKER_H_
 #include <map>

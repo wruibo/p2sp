@@ -1,8 +1,5 @@
 /*
  * queue.h
- *
- *  Created on: 2015年11月17日
- *      Author: wrb00_000
  */
 
 #ifndef CUBE_SERVICE_UTIL_WIN_QUEUE_H_
