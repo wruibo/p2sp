@@ -1,33 +1,45 @@
-#include "cube/thread/win/condition.h"
+#include <Windows.h>
+#include "cube/thread/condition.h"
 BEGIN_THREAD_NS
-condition::condition()
-{
-	//::InitializeConditionVariable(&_cond);
+condition::condition() {
 }
 
-condition::~condition()
-{
+condition::~condition() {
 
 }
 
-int condition::wait(cond_mutex_t *mutex, unsigned int msec/* = 0xFFFFFFFF*/)
-{
-//	if(msec < 0)
-//		::SleepConditionVariableCS(&_cond, &mutex->_cs, INFINITE);
-//	else
-//		::SleepConditionVariableCS(&_cond, &mutex->_cs, msec);
+int condition::init() {
+	::InitializeConditionVariable(&_cond);
 	return 0;
+}
+
+int condition::wait(condition_mutex *mutex) {
+	if(::SleepConditionVariableCS(&_cond, &mutex->_cm, INFINITE)) {
+		return 0;
+	}
+	return -1;
+}
+
+int condition::wait(condition_mutex *mutex, unsigned int msec)
+{
+	if(::SleepConditionVariableCS(&_cond, &mutex->_cm, msec))
+		return 0;
+	return -1;
 }
 
 int condition::wake()
 {
-//	::WakeConditionVariable(&_cond);
+	::WakeConditionVariable(&_cond);
 	return 0;
 }
 
 int condition::wakeall()
 {
-//	::WakeAllConditionVariable(&_cond);
+	::WakeAllConditionVariable(&_cond);
+	return 0;
+}
+
+int condition::destroy() {
 	return 0;
 }
 END_THREAD_NS

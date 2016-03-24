@@ -129,6 +129,7 @@
     <ClInclude Include="cube\string\trim.h" />
     <ClInclude Include="cube\string\win\convert.h" />
     <ClInclude Include="cube\thread\condition.h" />
+    <ClInclude Include="cube\thread\condition_mutex.h" />
     <ClInclude Include="cube\thread\linux\condition.h" />
     <ClInclude Include="cube\thread\linux\critical_section.h" />
     <ClInclude Include="cube\thread\linux\mutex.h" />
@@ -142,13 +143,14 @@
     <ClInclude Include="cube\thread\stdns.h" />
     <ClInclude Include="cube\thread\thread.h" />
     <ClInclude Include="cube\thread\thread_exception.h" />
+    <ClInclude Include="cube\thread\type.h" />
     <ClInclude Include="cube\thread\util.h" />
-    <ClInclude Include="cube\thread\win\condition.h" />
     <ClInclude Include="cube\thread\win\critical_section.h" />
     <ClInclude Include="cube\thread\win\mutex.h" />
     <ClInclude Include="cube\thread\win\rwlock.h" />
     <ClInclude Include="cube\thread\win\semaphore.h" />
     <ClInclude Include="cube\thread\win\thread.h" />
+    <ClInclude Include="cube\thread\win\type.h" />
     <ClInclude Include="cube\thread\win\util.h" />
     <ClInclude Include="cube\timer\crontab.h" />
     <ClInclude Include="cube\timer\stdns.h" />
@@ -175,6 +177,14 @@
     <ClCompile Include="cube\service\util\win\cdeque.cpp" />
     <ClCompile Include="cube\service\util\win\queue.cpp" />
     <ClCompile Include="cube\service\util\win\socket.cpp" />
+    <ClCompile Include="cube\thread\win\condition.cpp" />
+    <ClCompile Include="cube\thread\win\condition_mutex.cpp" />
+    <ClCompile Include="cube\thread\win\critical_section.cpp" />
+    <ClCompile Include="cube\thread\win\mutex.cpp" />
+    <ClCompile Include="cube\thread\win\rwlock.cpp" />
+    <ClCompile Include="cube\thread\win\semaphore.cpp" />
+    <ClCompile Include="cube\thread\win\thread.cpp" />
+    <ClCompile Include="cube\thread\win\util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,18 +1,9 @@
-#include <windows.h>
 #include "cube/thread/stdns.h"
 BEGIN_THREAD_NS
-static void sleep(unsigned long milliseconds)
-{
-	::Sleep(milliseconds);
-}
+extern void sleep(unsigned long milliseconds);
 
-static void sleep_for_ever()
-{
-	::Sleep((DWORD)-1);
-}
+extern void sleep_for_ever();
 
-static unsigned long get_current_thread_id()
-{
-	return ::GetCurrentThreadId();
-}
+extern unsigned long get_current_thread_id();
+
 END_THREAD_NS
