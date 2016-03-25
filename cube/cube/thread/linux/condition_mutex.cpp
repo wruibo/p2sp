@@ -2,7 +2,7 @@
 #include "cube/thread/condition_mutex.h"
 
 BEGIN_THREAD_NS
-condition_mutex::condition_mutex():_cm(0){
+condition_mutex::condition_mutex(){
 
 }
 condition_mutex::~condition_mutex(){
