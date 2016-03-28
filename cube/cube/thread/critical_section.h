@@ -1,12 +1,15 @@
 #ifndef CUBE_THREAD_CRITICAL_SECTION_H_
 #define CUBE_THREAD_CRITICAL_SECTION_H_
 #include "cube/thread/type.h"
+#include "cube/thread/mutex_base.h"
 
 BEGIN_THREAD_NS
-class critical_section {
+class critical_section: public mutex_base {
 public:
 	critical_section();
-	~critical_section();
+	virtual ~critical_section();
+
+	int init();
 
 	int lock();
 
@@ -16,8 +19,10 @@ public:
 
 	int unlock();
 
+	int destroy();
+
 private:
-	cs_t _cs;
+	critical_section_t _cs;
 };
 END_THREAD_NS
 

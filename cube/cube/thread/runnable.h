@@ -13,9 +13,9 @@ public:
 public:
 	/**
 	 *	runnable loop body, this method will execute repeatedly
-	 *until the thread has stopped
+	 *until the return value is false or thread has stopped
 	 */
-	virtual void loop() = 0;
+	virtual bool loop() = 0;
 };
 END_THREAD_NS
 #endif

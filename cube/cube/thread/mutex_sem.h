@@ -1,13 +1,12 @@
-#ifndef CUBE_THREAD_MUTEX_H_
-#define CUBE_THREAD_MUTEX_H_
+#ifndef _CUBE_THREAD_MUTEX_SEM_H
+#define _CUBE_THREAD_MUTEX_SEM_H
 #include "cube/thread/type.h"
 #include "cube/thread/mutex_base.h"
-
 BEGIN_THREAD_NS
-class mutex: public mutex_base {
+class mutex_sem: public mutex_base {
 public:
-	mutex();
-	virtual ~mutex();
+	mutex_sem();
+	virtual ~mutex_sem();
 
 	int init();
 
@@ -22,7 +21,7 @@ public:
 	int destroy();
 
 private:
-	mutex_t _mutex;
+	semaphore_t _semaphore;
 };
 END_THREAD_NS
 #endif

@@ -1,13 +1,12 @@
-#ifndef CUBE_THREAD_MUTEX_H_
-#define CUBE_THREAD_MUTEX_H_
+#ifndef _CUBE_THREAD_RWLOCK_H
+#define _CUBE_THREAD_RWLOCK_H
 #include "cube/thread/type.h"
 #include "cube/thread/mutex_base.h"
-
 BEGIN_THREAD_NS
-class mutex: public mutex_base {
+class rwlock: public mutex_base{
 public:
-	mutex();
-	virtual ~mutex();
+	rwlock();
+	~rwlock();
 
 	int init();
 
@@ -22,7 +21,7 @@ public:
 	int destroy();
 
 private:
-	mutex_t _mutex;
+	rwlock_t _rwlock;
 };
 END_THREAD_NS
 #endif

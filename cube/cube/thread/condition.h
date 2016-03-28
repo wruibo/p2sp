@@ -10,7 +10,7 @@ BEGIN_THREAD_NS
 class condition {
 public:
 	condition();
-	~condition();
+	virtual ~condition();
 
 	/**
 	 * initialize the condition variable

@@ -2,7 +2,7 @@
 #include "cube/thread/win/rwlock.h"
 
 BEGIN_THREAD_NS
-rwlock::rwlock():_islock_shared(false)
+rwlock::rwlock()
 {
 }
 

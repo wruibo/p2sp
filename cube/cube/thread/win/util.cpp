@@ -1,5 +1,6 @@
 #include <windows.h>
-#include "cube/thread/stdns.h"
+#include "cube/thread/util.h"
+
 BEGIN_THREAD_NS
 void sleep(unsigned long milliseconds)
 {

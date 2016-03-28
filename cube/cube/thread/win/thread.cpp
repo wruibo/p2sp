@@ -2,9 +2,10 @@
 #include "cube/thread/win/thread.h"
 
 BEGIN_THREAD_NS
-thread::thread():_runnable_obj(NULL),_hthread(NULL),_tid(-1),_stop(true)
-{
+thread::thread():_runnable(NULL),_thread(NULL) ,_stop(true) {
+}
 
+thread::thread(runnable *robj):_runnable(robj),_thread(NULL) ,_stop(true) {
 }
 
 thread::~thread()
@@ -14,15 +15,7 @@ thread::~thread()
 	_hthread = NULL;
 }
 
-int thread::start(runnable *obj)
-{
-	/*check if current thread is running*/
-	if(!_stop)
-	return -1;
-
-	/*make the runnable object by specified*/
-	_runnable_obj = obj;
-
+int thread::start() {
 	/*set the stop flag to false first*/
 	_stop = false;
 
@@ -34,42 +27,46 @@ int thread::start(runnable *obj)
 		_stop = true;
 		return -1;
 	}
-
-	/*create thread success, save the thread id*/
-	_tid = thread_id;
-
 	return 0;
 }
 
-int thread::stop()
-{
-	if(_stop)
-	return 0;
+int thread::start(runnable *robj) {
+	/*make the runnable object by specified*/
+	_runnable_obj = robj;
+	return this->start();
+}
+
+int thread::stop() {
+	if(_stop) {
+		return 0;
+	}
 	_stop = true;
 	return -1;
 }
 
-int thread::join()
-{
+int thread::join() {
 	DWORD res = WaitForSingleObject(_hthread, INFINITE);
-	if(res == WAIT_OBJECT_0)
-	return 0;
+	if(res == WAIT_OBJECT_0) {
+		return 0;
+	}
+	return -1;
+}
+
+unsigned int thread::thread_id() {
 	return 0;
 }
 
-unsigned int thread::thread_id()
-{
-	return _tid;
+int thread::run_loop() {
+	while(!_stop && this->_runnable->loop()) {
+		continue;
+	}
 }
 
 unsigned thread::thread_proxy_func(void* arg)
 {
 	thread *pthd = (thread*)arg;
-
 	//execute the run method of runnable object
-	while(!pthd->_stop)
-	pthd->_runnable_obj->loop();
-
+	pthd->run_loop();
 	//end thread
 	_endthreadex(0);
 

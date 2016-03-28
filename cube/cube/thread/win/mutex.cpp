@@ -1,45 +1,48 @@
 #include <Windows.h>
-#include "cube/thread/win/mutex.h"
+#include "cube/thread/mutex.h"
 
 BEGIN_THREAD_NS
-mutex::mutex()
-{
-	_hmutex = CreateMutex(NULL, FALSE, NULL);
-	if(_hmutex == NULL)
-	throw thread_exception("kthread::win32::mutex::mutex: create mutex failed.");
+mutex::mutex():_mutex(NULL) {
 }
 
-mutex::~mutex()
-{
-	CloseHandle(_hmutex);
-	_hmutex = NULL;
+mutex::~mutex(){
 }
 
+int mutex::init() {
+	_mutex = ::CreateMutex(NULL, FALSE, NULL);
+	if(_mutex == NULL) {
+		return -1;
+	}
+	return 0;
+}
 int mutex::lock()
 {
-	DWORD res = WaitForSingleObject(_hmutex, INFINITE);
-	if(res != WAIT_OBJECT_0)
-	throw thread_exception("kthread::win32::mutex::lock: wait for single object failed.");
-
+	DWORD res = ::WaitForSingleObject(_mutex, INFINITE);
+	if(res != WAIT_OBJECT_0) {
+		return -1;
+	}
 	return 0;
 }
 
-int mutex::rlock()
-{
+int mutex::rlock() {
 	return lock();
 }
 
-int mutex::wlock()
-{
+int mutex::wlock() {
 	return lock();
 }
 
-int mutex::unlock()
-{
-	BOOL res = ReleaseMutex(_hmutex);
-	if(!res)
-	throw thread_exception("kthread::win32::mutex::unlock: release mutex failed.");
+int mutex::unlock() {
+	BOOL res = ::ReleaseMutex(_mutex);
+	if(!res){
+		return -1;
+	}
+	return 0;
+}
 
+int mutex::destroy() {
+	::CloseHandle(_mutex);
+	_mutex = NULL;
 	return 0;
 }
 END_THREAD_NS
