@@ -12,3 +12,4 @@ ipch/
 *.bak
 .metadata/
 RemoteSystemsTempFiles/
+.DS_Store
