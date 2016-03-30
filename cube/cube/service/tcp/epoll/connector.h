@@ -7,6 +7,7 @@
 
 #ifndef CUBE_SERVICE_TCP_EPOLL_CONNECTOR_H_
 #define CUBE_SERVICE_TCP_EPOLL_CONNECTOR_H_
+#include <cube/service/tcp/epoll/workers.h>
 #include <list>
 #include <pthread.h>
 #include <sys/epoll.h>
@@ -16,7 +17,6 @@
 #include "cube/service/util/socket.h"
 #include "cube/service/tcp/handler.h"
 #include "cube/service/tcp/epoll/events.h"
-#include "cube/service/tcp/epoll/workers.h"
 
 BEGIN_SERVICE_TCP_NS
 class connector{
