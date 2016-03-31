@@ -1,14 +1,15 @@
-#include "cube/service/tcp/client.h"
-BEGIN_SERVICE_TCP_NS
-client::client(): _thread(0), _stop(true) {
+#include "cube/service/tcp/tcp_client.h"
+
+BEGIN_SERVICE_NS
+tcp_client::tcp_client(): _thread(0), _stop(true) {
 
 }
 
-client::~client() {
+tcp_client::~tcp_client() {
 }
 
-int client::start(int workers) {
-	/*check if client has been started*/
+int tcp_client::start(int workers) {
+	/*check if tcp_client has been started*/
 	if(!_stop){
 		return 0;
 	}
@@ -23,7 +24,7 @@ int client::start(int workers) {
 		return -1;
 	}
 
-	/*start client thread*/
+	/*start tcp_client thread*/
 	_stop = false;
 	if(pthread_create(&_thread, 0, client_thread_func, this) != 0){
 		_stop = true;
@@ -33,17 +34,17 @@ int client::start(int workers) {
 	return 0;
 }
 
-int client::build(unsigned int ip, unsigned short port, handler *hdr){
+int tcp_client::connect(unsigned int ip, unsigned short port, handler *hdr){
 	return _connector.connect(ip, port, hdr);
 }
 
-int client::stop() {
-	/*check current client status*/
+int tcp_client::stop() {
+	/*check current tcp_client status*/
 	if(_stop){
 		return 0;
 	}
 
-	/*stop client thread*/
+	/*stop tcp_client thread*/
 	_stop = true;
 	pthread_join(_thread, 0);
 
@@ -56,25 +57,25 @@ int client::stop() {
 	return 0;
 }
 
-void client::wait_for_next_loop(){
-	/*wait for 5ms*/
-	::usleep(5000);
-}
-
-void client::run_loop(){
+void tcp_client::run_loop(){
 	while(!_stop){
 		/*wait a tiny time for next loop*/
 		wait_for_next_loop();
 	}
 }
 
-void* client::client_thread_func(void* arg){
-	client *pclient = (client*)arg;
+void tcp_client::wait_for_next_loop(){
+	/*wait for 5ms*/
+	::usleep(5000);
+}
+
+void* tcp_client::client_thread_func(void* arg){
+	tcp_client *pclient = (tcp_client*)arg;
 	pclient->run_loop();
 	pthread_exit(0);
 	return 0;
 }
-END_SERVICE_TCP_NS
+END_SERVICE_NS
 
 
 

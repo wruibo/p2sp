@@ -1,8 +1,8 @@
-#ifndef CUBE_SERVICE_TCP_TIMER_H_
-#define CUBE_SERVICE_TCP_TIMER_H_
+#ifndef CUBE_SERVICE_UTIL_TIMER_H_
+#define CUBE_SERVICE_UTIL_TIMER_H_
 #include <time.h>
 #include "cube/service/stdns.h"
-BEGIN_SERVICE_TCP_NS
+BEGIN_SERVICE_NS
 class timer{
 public:
 	timer();
@@ -21,6 +21,6 @@ public:
 private:
 	time_t _tm;
 };
-END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_TIMER_H_ */
+END_SERVICE_NS
+#endif /* CUBE_SERVICE_UTIL_TIMER_H_ */
 

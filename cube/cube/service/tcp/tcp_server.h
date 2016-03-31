@@ -1,5 +1,5 @@
-#ifndef CUBE_SERVICE_TCP_SERVER_H_
-#define CUBE_SERVICE_TCP_SERVER_H_
+#ifndef CUBE_SERVICE_TCP_TCP_SERVER_H_
+#define CUBE_SERVICE_TCP_TCP_SERVER_H_
 
 #if defined(__linux__)
 #include "cube/service/tcp/epoll/server.h"
@@ -9,4 +9,4 @@
 #error "platform is not supported"
 #endif
 
-#endif /* CUBE_SERVICE_TCP_SERVER_H_ */
+#endif /* CUBE_SERVICE_TCP_TCP_SERVER_H_ */

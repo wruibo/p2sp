@@ -12,6 +12,7 @@ typedef HANDLE mutex_t;
 typedef SRWLOCK rwlock_t;
 typedef HANDLE semaphore_t;
 typedef HANDLE thread_t;
+typedef SOCKET socket_t;
 END_SERVICE_NS
 
 #ifndef __thread_return

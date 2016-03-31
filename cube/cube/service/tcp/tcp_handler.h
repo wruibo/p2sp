@@ -1,11 +1,12 @@
-#ifndef CUBE_SERVICE_TCP_HANDLER_H_
-#define CUBE_SERVICE_TCP_HANDLER_H_
+#ifndef CUBE_SERVICE_TCP_TCP_HANDLER_H_
+#define CUBE_SERVICE_TCP_TCP_HANDLER_H_
 #include "cube/service/stdns.h"
-#include "cube/service/tcp/timer.h"
-#include "cube/service/tcp/session.h"
+#include "cube/service/util/type.h"
+#include "cube/service/util/timer.h"
+#include "cube/service/tcp/tcp_session.h"
 
-BEGIN_SERVICE_TCP_NS
-class handler{
+BEGIN_SERVICE_NS
+class tcp_handler{
 public:
 	/*
 	 * called after the connection has been built successfully.
@@ -54,14 +55,14 @@ public:
 	 */
 	virtual int on_close(int err);
 public:
-	handler();
-	virtual ~handler(void);
+	tcp_handler();
+	virtual ~tcp_handler(void);
 
 	/**
 	 * set&get the socket of session
 	 */
-	void sock(SOCKET s);
-	SOCKET sock();
+	void socket(socket_t s);
+	socket_t sock();
 
 	/**
 	 * set&get the remote ip of session
@@ -122,7 +123,7 @@ private:
 	timer _timer;
 
 	//tcp session for the handler
-	session _session;
+	tcp_session _session;
 };
-END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_HANDLER_H_ */
+END_SERVICE_NS
+#endif /* CUBE_SERVICE_TCP_TCP_HANDLER_H_ */

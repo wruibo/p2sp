@@ -1,6 +1,6 @@
-#include "cube/service/tcp/timer.h"
+#include <cube/service/util/timer.h>
 
-BEGIN_SERVICE_TCP_NS
+BEGIN_SERVICE_NS
 void timer::set(int delay_secs) {
 	_tm = time(0) + delay_secs;
 }
@@ -17,4 +17,4 @@ bool timer::is_timeout(time_t now) {
 
 	return true;
 }
-END_SERVICE_TCP_NS
+END_SERVICE_NS

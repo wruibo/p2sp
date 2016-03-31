@@ -5,21 +5,20 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
-#define CUBE_SERVICE_CLIENT_EPOLL_CLIENT_H_
-#include <cube/service/tcp/epoll/workers.h>
-#include <unistd.h>
-#include <pthread.h>
-
+#ifndef CUBE_SERVICE_TCP_TCP_CLIENT_H_
+#define CUBE_SERVICE_TCP_TCP_CLIENT_H_
+#include <cube/service/tcp/tcp_handler.h>
+#include <cube/service/tcp/tcp_workers.h>
 #include "cube/service/stdns.h"
+#include "cube/service/util/type.h"
 
-BEGIN_SERVICE_TCP_NS
+BEGIN_SERVICE_NS
 using namespace std;
-/*client service using epoll under linux*/
-class client {
+/*client service*/
+class tcp_client {
 public:
-	client();
-	virtual ~client();
+	tcp_client();
+	virtual ~tcp_client();
 
 	/**
 	 * start the client service with specified workers
@@ -37,7 +36,7 @@ public:
 	 *@return:
 	 *	0-success, otherwise failed.
 	 */
-	virtual int build(unsigned int ip, unsigned short port, handler *hdr);
+	virtual int connect(unsigned int ip, unsigned short port, handler *hdr);
 
 	/**
 	 * stop the client service
@@ -50,12 +49,7 @@ private:
 	/**
 	 * pull established handlers from connector, dispatch to workers
 	 */
-	void process_established_handlers();
-
-	/**
-	 * wait a tiny time for next loop in client thread
-	 */
-	void wait_for_next_loop();
+	void process();
 
 	/**
 	 * loop for client thread
@@ -63,9 +57,14 @@ private:
 	void run_loop();
 
 	/**
+	 * wait a tiny time for next loop in client thread
+	 */
+	void wait_for_next_loop();
+
+	/**
 	 * thread function for client thread
 	 */
-	static void* client_thread_func(void *arg);
+	static __thread_return client_thread_func(void *arg);
 
 private:
 	//connector of the client
@@ -74,9 +73,9 @@ private:
 	workers _workers;
 
 	//thread identifier
-	pthread_t _thread;
+	thread_t _thread;
 	//stop flag for client service
 	bool _stop;
 };
-END_SERVICE_TCP_NS
+END_SERVICE_NS
 #endif /* CUBE_SERVICE_EPOLL_CONNECTOR_H_ */

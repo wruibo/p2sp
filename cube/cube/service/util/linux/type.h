@@ -13,6 +13,8 @@ typedef pthread_mutex_t mutex_t;
 typedef pthread_rwlock_t rwlock_t;
 typedef sem_t semaphore_t;
 typedef pthread_t thread_t;
+
+typedef int socket_t;
 END_SERVICE_NS
 
 #ifndef __thread_return
