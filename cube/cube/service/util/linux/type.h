@@ -2,6 +2,7 @@
 #define CUBE_SERVICE_UTIL_LINUX_TYPE_H_
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/epoll.h>
 #include "cube/service/stdns.h"
 
 BEGIN_SERVICE_NS
@@ -15,6 +16,11 @@ typedef sem_t semaphore_t;
 typedef pthread_t thread_t;
 
 typedef int socket_t;
+
+typedef struct {
+	int _epoll;
+	struct epoll_event _events[256];
+}io_mode_t;
 END_SERVICE_NS
 
 #ifndef __thread_return

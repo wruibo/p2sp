@@ -59,27 +59,10 @@ public:
 	virtual ~tcp_handler(void);
 
 	/**
-	 * set&get the socket of session
-	 */
-	void socket(socket_t s);
-	socket_t sock();
-
-	/**
-	 * set&get the remote ip of session
-	 */
-	void remote_ip(unsigned int ip);
-	unsigned int remote_ip();
-
-	/**
-	 * set&get the remote port of session
-	 */
-	void remote_port(unsigned short port);
-	unsigned short remote_port();
-
-	/**
 	 * set timer which will be triggered after specified delay seconds
 	 */
 	void set_timer(int delay_seconds);
+
 	/**
 	 * check if timer has been triggered
 	 */
@@ -94,11 +77,6 @@ protected:
 	 *	data size sent or <0 indicate an error
 	 */
 	int send(const void* data, int sz);
-
-	/**
-	 * request receive data action from remote peer
-	 */
-	int recv(int sz);
 
 public:
 	/**

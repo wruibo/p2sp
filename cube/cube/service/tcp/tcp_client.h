@@ -7,10 +7,11 @@
 
 #ifndef CUBE_SERVICE_TCP_TCP_CLIENT_H_
 #define CUBE_SERVICE_TCP_TCP_CLIENT_H_
-#include <cube/service/tcp/tcp_handler.h>
-#include <cube/service/tcp/tcp_workers.h>
-#include "cube/service/stdns.h"
 #include "cube/service/util/type.h"
+#include "cube/service/tcp/tcp_handler.h"
+#include "cube/service/tcp/tcp_workers.h"
+#include "cube/service/tcp/tcp_connector.h"
+
 
 BEGIN_SERVICE_NS
 using namespace std;
@@ -54,12 +55,12 @@ private:
 	/**
 	 * loop for client thread
 	 */
-	void run_loop();
+	void loop();
 
 	/**
 	 * wait a tiny time for next loop in client thread
 	 */
-	void wait_for_next_loop();
+	void wait();
 
 	/**
 	 * thread function for client thread
@@ -68,9 +69,9 @@ private:
 
 private:
 	//connector of the client
-	connector _connector;
+	tcp_connector _connector;
 	//workers of the client
-	workers _workers;
+	tcp_workers _workers;
 
 	//thread identifier
 	thread_t _thread;

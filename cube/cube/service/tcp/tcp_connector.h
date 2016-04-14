@@ -8,7 +8,6 @@
 #ifndef CUBE_SERVICE_TCP_TCP_CONNECTOR_H_
 #define CUBE_SERVICE_TCP_TCP_CONNECTOR_H_
 #include <list>
-
 #include "cube/service/util/type.h"
 #include "cube/service/tcp/tcp_handler.h"
 #include "cube/service/tcp/tcp_workers.h"
@@ -24,7 +23,7 @@ public:
 	 *@return:
 	 *	0-success, otherwise for failed
 	 */
-	int start(workers *workers);
+	int start(tcp_workers *workers);
 
 	/**
 	 * connect to remote peer with specified handler
@@ -72,12 +71,12 @@ private:
 	/**
 	 * loop for connect thread
 	 */
-	void run_loop();
+	void loop();
 
 	/**
 	 * wait for next loop in connect thread
 	 */
-	void wait_for_next_loop();
+	void wait();
 
 	/**
 	 * thread function for checking the connection status
@@ -86,7 +85,7 @@ private:
 
 private:
 	//workers reference
-	workers *_workers;
+	tcp_workers *_workers;
 
 	//pending handlers
 	std::list<handler*> _pending_handlers;

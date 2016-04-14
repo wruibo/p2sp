@@ -5,8 +5,8 @@
  *      Author: wrb00_000
  */
 
-#ifndef CUBE_SERVICE_TCP_EPOLL_SESSION_H_
-#define CUBE_SERVICE_TCP_EPOLL_SESSION_H_
+#ifndef CUBE_SERVICE_TCP_EPOLL_TCP_SESSION_H_
+#define CUBE_SERVICE_TCP_EPOLL_TCP_SESSION_H_
 #include <list>
 #include "cube/service/stdns.h"
 BEGIN_SERVICE_TCP_NS
@@ -158,4 +158,4 @@ unsigned short session::remote_port() const{
 }
 
 END_SERVICE_TCP_NS
-#endif /* CUBE_SERVICE_TCP_EPOLL_SESSION_H_ */
+#endif /* CUBE_SERVICE_TCP_EPOLL_TCP_SESSION_H_ */
